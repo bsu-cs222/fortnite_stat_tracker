@@ -15,4 +15,10 @@ void main() {
     var result = await fetcher.getStats(exampleID);
     expect(result, startsWith('{"result":true,"name":"MaxSineFN","accoun'));
   });
+
+  test('I can store stats', () async {
+    var body = await fetcher.getStats(exampleID);
+    var player = fetcher.assignStats(body);
+    expect(player.getMatchesPlayed(), 21706);
+  });
 }

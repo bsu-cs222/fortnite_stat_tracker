@@ -2,7 +2,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class StatFetcher {
+class JsonDecoder {
+  decodeJson(jsonData) {
+    final decoded = jsonDecode(jsonData);
+    return decoded;
+  }
+}
+
+class StatFetcher extends JsonDecoder {
   Future<String> getID(username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
     var parsedUrl = Uri.parse(url);
@@ -20,46 +27,96 @@ class StatFetcher {
         headers: {'Authorization': '07c4969c-7271f85b-4178249c-4955adfa'});
     return result.body;
   }
+
+  Player assignStats(body) {
+    final Player player = Player();
+    player.setStats(body);
+    return player;
+  }
 }
 
-class player {
+class Player extends JsonDecoder {
   String username = '';
-  String level = '';
-  String playerKD = '';
-  String playerWinRate = '';
-  String playerKills = '';
-  String playerMatches = '';
+  int level = 0;
+  double playerKD = 0.0;
+  double playerWinRate = 0.0;
+  int playerKills = 0;
+  int playerMatches = 0;
 
-  String setUsername(newUsername) {
+  void setStats(body) {
+    final playerJSON = decodeJson(body);
+    setUsername(playerJSON);
+    setLevel(playerJSON);
+    setKD(playerJSON);
+    setWinRate(playerJSON);
+    setKills(playerJSON);
+    setMatchesPlayed(playerJSON);
+  }
+
+  String setUsername(playerJSON) {
+    final newUsername = playerJSON.keys.first;
     return username = newUsername;
   }
 
-  String setLevel(newLevel) {
-    return username = newLevel;
+  int setLevel(playerJSON) {
+    final newLevel = playerJSON['account']['level'];
+    return level = newLevel;
   }
 
-  double setKD(soloKD, duoKD, trioKD, squadKD) {
-    var overallKD = (soloKD + duoKD + trioKD + squadKD) / 4;
+  double setKD(playerJSON) {
+    var overallKD = ((playerJSON['global_stats']['solo']['kd']) +
+        (playerJSON['global_stats']['duo']['kd']) +
+        (playerJSON['global_stats']['trio']['kd']) +
+        (playerJSON['global_stats']['squad']['kd']) / 4);
     return playerKD = overallKD;
   }
 
-  double setWinRate(soloWinRate, duoWinRate, trioWinRate, squadWinRate) {
-    var overallWinRate =
-        (soloWinRate + duoWinRate + trioWinRate + squadWinRate) / 4;
+  double setWinRate(playerJSON) {
+    var overallWinRate = ((playerJSON['global_stats']['solo']['winrate']) +
+        (playerJSON['global_stats']['duo']['winrate']) +
+        (playerJSON['global_stats']['trio']['winrate']) +
+        (playerJSON['global_stats']['squad']['winrate']) / 4);
     return playerWinRate = overallWinRate;
   }
 
-  String setKills(soloKills, duoKills, trioKills, squadKills) {
-    var overallKills = (soloKills + duoKills + trioKills + squadKills);
+  int setKills(playerJSON) {
+    var overallKills = ((playerJSON['global_stats']['solo']['kills']) +
+        (playerJSON['global_stats']['duo']['kills']) +
+        (playerJSON['global_stats']['trio']['kills']) +
+        (playerJSON['global_stats']['squad']['kills']));
     return playerKills = overallKills;
   }
 
-  String setMatchesPlayed(soloMatchesPlayed, duoMatchesPlayed,
-      trioMatchesPlayed, squadMatchesPlayed) {
-    var overallMatchesPlayed = (soloMatchesPlayed +
-        duoMatchesPlayed +
-        trioMatchesPlayed +
-        squadMatchesPlayed);
+  int setMatchesPlayed(playerJSON) {
+    var overallMatchesPlayed = ((playerJSON['global_stats']['solo']
+            ['matchesplayed']) +
+        (playerJSON['global_stats']['duo']['matchesplayed']) +
+        (playerJSON['global_stats']['trio']['matchesplayed']) +
+        (playerJSON['global_stats']['squad']['matchesplayed']));
     return playerMatches = overallMatchesPlayed;
+  }
+
+  String getUsername() {
+    return username;
+  }
+
+  int getLevel() {
+    return level;
+  }
+
+  double getPlayerKD() {
+    return playerKD;
+  }
+
+  double getPlayerWinRate() {
+    return playerWinRate;
+  }
+
+  int getPlayerKills() {
+    return playerKills;
+  }
+
+  int getMatchesPlayed() {
+    return playerMatches;
   }
 }
