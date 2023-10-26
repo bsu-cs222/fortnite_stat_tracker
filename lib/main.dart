@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:r6_getter_test/stat_tracker_classes.dart';
 
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GradeHelp App',
-      home: EnterPercentage(),
+      title: 'Fortnite Stat Tracker App',
+      home: StatTracker(),
     );
   }
 }
 
 // Define a custom Form widget.
-class EnterPercentage extends StatelessWidget {
-  TextEditingController textEditingController = TextEditingController();
+class StatTracker extends StatefulWidget {
+
+  @override
+  State<StatTracker> createState() => _StatTrackerState();
+}
+class _StatTrackerState extends State<StatTracker>{
+  Future<Player>? future;
+  TextEditingController username = TextEditingController();
+  TextEditingController platform = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
-    final homeTitle = Column(
+    const homeTitle = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Fortnite\nStat \nTracker',
+        Text('Fortnite Stat\nTracker',
           style: TextStyle(
-            color: Colors.yellow,
+            color: Colors.blue,
             fontSize: 40,
           ),
         ),
@@ -34,44 +44,79 @@ class EnterPercentage extends StatelessWidget {
     );
 
     final usernameInput = TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           hintText: 'Platform (PC, Playstation, Xbox)',
           border: OutlineInputBorder()
       ),
+      controller: username,
     );
 
     final platformInput = TextField(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           hintText: 'Platform (PC, Playstation, Xbox)',
           border: OutlineInputBorder()
       ),
+      controller: platform,
     );
 
-    final textColumn = Column(
+    //void searchForAccount(){
+      //setState((){
+        //null;
+     // });
+   // }
+
+    final textColumn =  Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         usernameInput,
-        SizedBox(height: 10.0, width: 10.0),
+        const SizedBox(height: 10.0, width: 10.0),
         platformInput,
-        SizedBox(height:5.0, width: 5.0),
+        const SizedBox(height:5.0, width: 5.0),
+        const ElevatedButton(onPressed:
+        //searchForAccount,
+        null,
+            child: Text('Search'))
 
       ],
     );
-
-    return Scaffold(
-        backgroundColor: Colors.blue,
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center ,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(child:
-            homeTitle,
-            ),
-            Expanded(child:
-            textColumn,
-            )
-          ],
-        )
-    );
+    if (future == null) {
+      return Scaffold(
+          backgroundColor: Colors.white,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Expanded(child:
+                homeTitle,
+              ),
+              Expanded(child:
+                textColumn,
+              ),
+            ],
+          )
+      );
+    } else {
+      return FutureBuilder(
+          future: (future),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text('${snapshot.data}');
+            } else {
+              return const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(30.0),
+                      child: Text('Loading',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 30,
+                          )),
+                    ),
+                  ]);
+            }
+          });
+    }
   }
 }
