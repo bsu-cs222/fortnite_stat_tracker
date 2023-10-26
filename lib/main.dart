@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Fortnite Stat Tracker App',
       home: StatTracker(),
     );
@@ -18,6 +18,8 @@ class MyApp extends StatelessWidget {
 
 // Define a custom Form widget.
 class StatTracker extends StatefulWidget {
+  const StatTracker({super.key});
+
 
   @override
   State<StatTracker> createState() => _StatTrackerState();
@@ -45,7 +47,7 @@ class _StatTrackerState extends State<StatTracker>{
 
     final usernameInput = TextField(
       decoration: const InputDecoration(
-          hintText: 'Platform (PC, Playstation, Xbox)',
+          hintText: 'Username',
           border: OutlineInputBorder()
       ),
       controller: username,
@@ -53,7 +55,7 @@ class _StatTrackerState extends State<StatTracker>{
 
     final platformInput = TextField(
       decoration: const InputDecoration(
-          hintText: 'Platform (PC, Playstation, Xbox)',
+          hintText: 'Platform (pc, psn, xbl)',
           border: OutlineInputBorder()
       ),
       controller: platform,
