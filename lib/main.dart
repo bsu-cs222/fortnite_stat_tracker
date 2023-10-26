@@ -1,28 +1,77 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
 
-import "package:fortnite_api_io/fortnite_api_io.dart";
-import 'package:http/http.dart' as http;
 
-void main() async {
-  const url = "https://fortniteapi.io/v1/lookup?username=MaxSineFN";
+void main() => runApp(MyApp());
 
-  var parsedUrl = Uri.parse(url);
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'GradeHelp App',
+      home: EnterPercentage(),
+    );
+  }
+}
 
-  final http.Response response2 = await http.get(parsedUrl,
-      headers: {'Authorization': '07c4969c-7271f85b-4178249c-4955adfa'});
+// Define a custom Form widget.
+class EnterPercentage extends StatelessWidget {
+  TextEditingController textEditingController = TextEditingController();
 
-  final IDbody = jsonDecode(response2.body);
+  @override
+  Widget build(BuildContext context) {
 
-  final pagesMap = IDbody['account_id'];
+    final homeTitle = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text('Fortnite\nStat \nTracker',
+          style: TextStyle(
+            color: Colors.yellow,
+            fontSize: 40,
+          ),
+        ),
+      ],
+    );
 
-  print(pagesMap);
+    final usernameInput = TextField(
+      decoration: InputDecoration(
+          hintText: 'Platform (PC, Playstation, Xbox)',
+          border: OutlineInputBorder()
+      ),
+    );
 
-  var url2 = "https://fortniteapi.io/v1/stats?account=$pagesMap";
+    final platformInput = TextField(
+      decoration: InputDecoration(
+          hintText: 'Platform (PC, Playstation, Xbox)',
+          border: OutlineInputBorder()
+      ),
+    );
 
-  var parsedUrl2 = Uri.parse(url2);
+    final textColumn = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        usernameInput,
+        SizedBox(height: 10.0, width: 10.0),
+        platformInput,
+        SizedBox(height:5.0, width: 5.0),
 
-  final http.Response result = await http.get(parsedUrl2,
-      headers: {'Authorization': '07c4969c-7271f85b-4178249c-4955adfa'});
+      ],
+    );
 
-  print(result.body);
+    return Scaffold(
+        backgroundColor: Colors.blue,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center ,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(child:
+            homeTitle,
+            ),
+            Expanded(child:
+            textColumn,
+            )
+          ],
+        )
+    );
+  }
 }
