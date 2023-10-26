@@ -25,7 +25,7 @@ class StatTracker extends StatefulWidget {
   State<StatTracker> createState() => _StatTrackerState();
 }
 class _StatTrackerState extends State<StatTracker>{
-  Future<Player>? future;
+  String future = 'pp';
   TextEditingController username = TextEditingController();
   TextEditingController platform = TextEditingController();
 
@@ -74,14 +74,14 @@ class _StatTrackerState extends State<StatTracker>{
         const SizedBox(height: 10.0, width: 10.0),
         platformInput,
         const SizedBox(height:5.0, width: 5.0),
-        const ElevatedButton(onPressed:
+         ElevatedButton(
+            onPressed: _onButtonPressed,
         //searchForAccount,
-        null,
-            child: Text('Search'))
+            child: const Text('Search'))
 
       ],
     );
-    if (future == null) {
+    if (future == '') {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Row(
@@ -98,27 +98,34 @@ class _StatTrackerState extends State<StatTracker>{
           )
       );
     } else {
-      return FutureBuilder(
-          future: (future),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text('${snapshot.data}');
-            } else {
-              return const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(30.0),
-                      child: Text('Loading',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 30,
-                          )),
-                    ),
-                  ]);
+      return const Scaffold(
+          backgroundColor: Colors.white,
+          body:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('player'),
+          ]
+          )
+      );
             }
-          });
     }
+  void _onButtonPressed() {
+    final fetcher = StatFetcher();
+    fetcher.getID(username);
+    final jsonBody = fetcher.getStatJSON(username, platform);
+    final playerObj = fetcher.assignStats(jsonBody);
+    setState(() {
+      try{
+        final fetcher = StatFetcher();
+        fetcher.getID(username);
+        final jsonBody = fetcher.getStatJSON(username, platform);
+        final playerObj = fetcher.assignStats(jsonBody);
+        future = 'gay';
+      } catch (e){
+        future = 'There was a network error';
+      }
+
+    });
   }
 }

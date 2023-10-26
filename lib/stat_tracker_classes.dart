@@ -34,14 +34,14 @@ class StatFetcher extends JsonDecoder {
     return result.body;
   }
 
-  Player assignStats(body) {
-    final Player player = Player();
+  PlayerStats assignStats(body) {
+    final PlayerStats player = PlayerStats();
     player.setStats(body);
     return player;
   }
 }
 
-class Player extends JsonDecoder {
+class PlayerStats extends JsonDecoder {
   String username = '';
   int level = 0;
   double playerKD = 0.0;
@@ -95,7 +95,7 @@ class Player extends JsonDecoder {
 
   int setMatchesPlayed(playerJSON) {
     var overallMatchesPlayed = ((playerJSON['global_stats']['solo']
-            ['matchesplayed']) +
+    ['matchesplayed']) +
         (playerJSON['global_stats']['duo']['matchesplayed']) +
         (playerJSON['global_stats']['trio']['matchesplayed']) +
         (playerJSON['global_stats']['squad']['matchesplayed']));
