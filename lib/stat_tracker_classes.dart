@@ -20,8 +20,13 @@ class StatFetcher extends JsonDecoder {
     return userID;
   }
 
-  Future<String> getStats(userId) async {
-    final url = "https://fortniteapi.io/v1/stats?account=$userId";
+  Future<String> getStatJSON(userId, platform) async {
+    var url = "https://fortniteapi.io/v1/stats?account=$userId";
+    if (platform == "xbl") {
+      url = "https://fortniteapi.io/v1/stats?account=$userId&platform=xbl";
+    } else if (platform == "psn") {
+      url = "https://fortniteapi.io/v1/stats?account=$userId&platform=psn";
+    }
     var parsedUrl = Uri.parse(url);
     final http.Response result = await http.get(parsedUrl,
         headers: {'Authorization': '07c4969c-7271f85b-4178249c-4955adfa'});
