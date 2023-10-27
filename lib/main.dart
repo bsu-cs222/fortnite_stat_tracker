@@ -49,7 +49,7 @@ class _StatTrackerState extends State<StatTracker>{
 
     final usernameInput = TextField(
       decoration: const InputDecoration(
-          hintText: 'Username',
+          hintText: 'Account ID',
           border: OutlineInputBorder()
       ),
       controller: controller1,
@@ -57,17 +57,11 @@ class _StatTrackerState extends State<StatTracker>{
 
     final platformInput = TextField(
       decoration: const InputDecoration(
-          hintText: 'Platform (pc, psn, xbl)',
+          hintText: 'Platform (PC, PlayStation, Xbox)',
           border: OutlineInputBorder()
       ),
       controller: controller2,
     );
-
-    //void searchForAccount(){
-      //setState((){
-        //null;
-     // });
-   // }
 
     final textColumn =  Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -122,12 +116,10 @@ class _StatTrackerState extends State<StatTracker>{
 
           ),
             ),
-          Container(
-            child : ElevatedButton(onPressed: _onPressed,
-              child: Text('Return to Home'
+            ElevatedButton(onPressed: _onPressed,
+              child: const Text('Return to Home'
               ),
             ),
-          ),
     ]),
 
           );
