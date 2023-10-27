@@ -106,10 +106,31 @@ class _StatTrackerState extends State<StatTracker>{
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(currentPlayer),
-          ]
-          )
-      );
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                color: Colors.grey,
+
+                ),
+              child: Center(
+                child: Text(currentPlayer,
+                style:  const TextStyle(
+                color: Colors.blue,
+                  fontSize: 40,
+            ),
+            ),
+
+          ),
+            ),
+          Container(
+            child : ElevatedButton(onPressed: _onPressed,
+              child: Text('Return to Home'
+              ),
+            ),
+          ),
+    ]),
+
+          );
             }
     }
     String organizeStats(PlayerStats player){
@@ -133,7 +154,15 @@ class _StatTrackerState extends State<StatTracker>{
       } catch (e){
         currentPlayer = 'There was a network error';
       }
-
+    });
+  }
+  void _onPressed(){
+    setState(() {
+      currentPlayer = '';
+      controller2.clear();
+      controller1.clear();
     });
   }
 }
+
+
