@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:r6_getter_test/stat_tracker_classes.dart';
 
 
+
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -25,9 +27,9 @@ class StatTracker extends StatefulWidget {
   State<StatTracker> createState() => _StatTrackerState();
 }
 class _StatTrackerState extends State<StatTracker>{
-  String future = 'pp';
-  TextEditingController username = TextEditingController();
-  TextEditingController platform = TextEditingController();
+  String currentPlayer = '';
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class _StatTrackerState extends State<StatTracker>{
           hintText: 'Username',
           border: OutlineInputBorder()
       ),
-      controller: username,
+      controller: controller1,
     );
 
     final platformInput = TextField(
@@ -58,7 +60,7 @@ class _StatTrackerState extends State<StatTracker>{
           hintText: 'Platform (pc, psn, xbl)',
           border: OutlineInputBorder()
       ),
-      controller: platform,
+      controller: controller2,
     );
 
     //void searchForAccount(){
@@ -81,7 +83,7 @@ class _StatTrackerState extends State<StatTracker>{
 
       ],
     );
-    if (future == '') {
+    if (currentPlayer == '') {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Row(
@@ -98,32 +100,38 @@ class _StatTrackerState extends State<StatTracker>{
           )
       );
     } else {
-      return const Scaffold(
+      return Scaffold(
           backgroundColor: Colors.white,
           body:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('player'),
+            Text(currentPlayer),
           ]
           )
       );
             }
     }
-  void _onButtonPressed() {
+    String organizeStats(PlayerStats player){
+      String organizedStats = 'Username: ${player.getUsername()}'
+          '\nLevel: ${player.getLevel()}\nK/D: ${player.getPlayerKD()}'
+          '\nWin Rate: ${player.getPlayerWinRate()}\nEliminations: ${player.getPlayerKills()}\n'
+          'Matches Played: ${player.getMatchesPlayed()}\n';
+      return organizedStats;
+    }
+  void _onButtonPressed()async{
     final fetcher = StatFetcher();
-    fetcher.getID(username);
-    final jsonBody = fetcher.getStatJSON(username, platform);
+    final username = controller1.text;
+    final platform = controller2.text;
+    final playerID = await fetcher.getID(username);
+    final jsonBody = await fetcher.getStatJSON(playerID, platform);
     final playerObj = fetcher.assignStats(jsonBody);
+    final stats = organizeStats(playerObj);
     setState(() {
       try{
-        final fetcher = StatFetcher();
-        fetcher.getID(username);
-        final jsonBody = fetcher.getStatJSON(username, platform);
-        final playerObj = fetcher.assignStats(jsonBody);
-        future = 'gay';
+        currentPlayer = stats;
       } catch (e){
-        future = 'There was a network error';
+        currentPlayer = 'There was a network error';
       }
 
     });

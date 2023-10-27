@@ -60,7 +60,7 @@ class PlayerStats extends JsonDecoder {
   }
 
   String setUsername(playerJSON) {
-    final newUsername = playerJSON.keys.first;
+    final newUsername = playerJSON['name'];
     return username = newUsername;
   }
 
