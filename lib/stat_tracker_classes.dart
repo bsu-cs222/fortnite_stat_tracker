@@ -10,14 +10,16 @@ class JsonDecoder {
 }
 
 class StatFetcher extends JsonDecoder {
-  Future<String> getID(username) async {
+  Future<String?> getID(username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
     var parsedUrl = Uri.parse(url);
     final http.Response response2 = await http.get(parsedUrl,
         headers: {'Authorization': '07c4969c-7271f85b-4178249c-4955adfa'});
-    final IdBody = jsonDecode(response2.body);
-    final userID = IdBody['account_id'];
-    return userID;
+    final iDBody = jsonDecode(response2.body);
+
+      final userID = iDBody['account_id'];
+      return userID;
+
   }
 
   Future<String> getStatJSON(userId, platform) async {
@@ -125,3 +127,4 @@ class PlayerStats extends JsonDecoder {
     return playerMatches;
   }
 }
+

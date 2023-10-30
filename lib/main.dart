@@ -136,17 +136,24 @@ class _StatTrackerState extends State<StatTracker>{
     final fetcher = StatFetcher();
     final username = controller1.text;
     final platform = controller2.text;
-    final playerID = await fetcher.getID(username);
-    final jsonBody = await fetcher.getStatJSON(playerID, platform);
-    final playerObj = fetcher.assignStats(jsonBody);
-    final stats = organizeStats(playerObj);
-    setState(() {
-      try{
-        currentPlayer = stats;
-      } catch (e){
-        currentPlayer = 'There was a network error';
+      final playerID = await fetcher.getID(username);
+      if(playerID==null){
+        currentPlayer = 'Account ID Invalid';
+        setState(() {
+
+        });
+      }else {
+        final jsonBody = await fetcher.getStatJSON(playerID, platform);
+        final playerObj = fetcher.assignStats(jsonBody);
+        final stats = organizeStats(playerObj);
+        setState(() {
+          try{
+            currentPlayer = stats;
+          } catch (e){
+            currentPlayer = 'There was a network error';
+          }
+        });
       }
-    });
   }
   void _onPressed(){
     setState(() {
