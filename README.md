@@ -1,16 +1,9 @@
-# r6_getter_test
+# fortnite_stat_tracker
 
-A new Flutter project.
+An application that allows a user to view their account stats on fortnite.   
 
-## Getting Started
+  This application asks for the user's Epic account ID and platform (PC, Playstation, and Xbox). Once the user presses the search button, the application will display the user's overall stats. If the account ID is invalid, then "Invalid Account ID" wil be displayed instead of user stats. When the user hits return, the application will reload the previous page, aloowing the user to search for another account.
 
-This project is a starting point for a Flutter application.
+Authors: Andrew Bonner, Zack Squires, and Zach Bates
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
