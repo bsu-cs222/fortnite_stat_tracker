@@ -20,7 +20,7 @@ class StatFetcher extends JsonDecoder with DataExtractor {
   final File apiFile = File('lib/Auth');
   Future<String?> getID(username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
-    var parsedUrl = Uri.parse(url);
+    Uri parsedUrl = Uri.parse(url);
     final http.Response response2 = await http
         .get(parsedUrl, headers: {'Authorization': pullString(apiFile)});
     final iDBody = jsonDecode(response2.body);
@@ -28,27 +28,27 @@ class StatFetcher extends JsonDecoder with DataExtractor {
     return userID;
   }
 
-  Future<String> getStatJSON(userId, platform) async {
-    var url = "https://fortniteapi.io/v1/stats?account=$userId";
+  Future<String> getStatJSON(String userId, String platform) async {
+    String url = "https://fortniteapi.io/v1/stats?account=$userId";
     if (platform == "xbl") {
       url = "https://fortniteapi.io/v1/stats?account=$userId&platform=xbl";
     } else if (platform == "psn") {
       url = "https://fortniteapi.io/v1/stats?account=$userId&platform=psn";
     }
-    var parsedUrl = Uri.parse(url);
+    Uri parsedUrl = Uri.parse(url);
     final http.Response result = await http
         .get(parsedUrl, headers: {'Authorization': pullString(apiFile)});
     return result.body;
   }
 
-  PlayerStats assignStats(body) {
-    final PlayerStats player = PlayerStats();
-    player.setStats(body);
+  PlayerStatsDecoder assignStats(String body) {
+    final PlayerStatsDecoder player = PlayerStatsDecoder();
+    player.statDecoder(body);
     return player;
   }
 }
 
-class PlayerStats extends JsonDecoder {
+class PlayerStatsDecoder extends JsonDecoder {
   String username = '';
   int level = 0;
   double playerKD = 0.0;
@@ -56,56 +56,56 @@ class PlayerStats extends JsonDecoder {
   int playerKills = 0;
   int playerMatches = 0;
 
-  void setStats(body) {
-    final playerJSON = decodeJson(body);
-    setUsername(playerJSON);
-    setLevel(playerJSON);
-    setKD(playerJSON);
-    setWinRate(playerJSON);
-    setKills(playerJSON);
-    setMatchesPlayed(playerJSON);
+  void statDecoder(String body) {
+    final jsonPlayerData = decodeJson(body);
+    setUsername(jsonPlayerData);
+    setLevel(jsonPlayerData);
+    setKD(jsonPlayerData);
+    setWinRate(jsonPlayerData);
+    setKills(jsonPlayerData);
+    setMatchesPlayed(jsonPlayerData);
   }
 
-  String setUsername(playerJSON) {
-    final newUsername = playerJSON['name'];
+  String setUsername(final jsonPlayerData) {
+    final newUsername = jsonPlayerData['name'];
     return username = newUsername;
   }
 
-  int setLevel(playerJSON) {
-    final newLevel = playerJSON['account']['level'];
+  int setLevel(final jsonPlayerData) {
+    final newLevel = jsonPlayerData['account']['level'];
     return level = newLevel;
   }
 
-  double setKD(playerJSON) {
-    var overallKD = ((playerJSON['global_stats']['solo']['kd']) +
-        (playerJSON['global_stats']['duo']['kd']) +
-        (playerJSON['global_stats']['trio']['kd']) +
-        (playerJSON['global_stats']['squad']['kd']) / 4);
+  double setKD(final jsonPlayerData) {
+    final overallKD = ((jsonPlayerData['global_stats']['solo']['kd']) +
+        (jsonPlayerData['global_stats']['duo']['kd']) +
+        (jsonPlayerData['global_stats']['trio']['kd']) +
+        (jsonPlayerData['global_stats']['squad']['kd']) / 4);
     return playerKD = overallKD;
   }
 
-  double setWinRate(playerJSON) {
-    var overallWinRate = ((playerJSON['global_stats']['solo']['winrate']) +
-        (playerJSON['global_stats']['duo']['winrate']) +
-        (playerJSON['global_stats']['trio']['winrate']) +
-        (playerJSON['global_stats']['squad']['winrate']) / 4);
+  double setWinRate(final jsonPlayerData) {
+    var overallWinRate = ((jsonPlayerData['global_stats']['solo']['winrate']) +
+        (jsonPlayerData['global_stats']['duo']['winrate']) +
+        (jsonPlayerData['global_stats']['trio']['winrate']) +
+        (jsonPlayerData['global_stats']['squad']['winrate']) / 4);
     return playerWinRate = overallWinRate;
   }
 
-  int setKills(playerJSON) {
-    var overallKills = ((playerJSON['global_stats']['solo']['kills']) +
-        (playerJSON['global_stats']['duo']['kills']) +
-        (playerJSON['global_stats']['trio']['kills']) +
-        (playerJSON['global_stats']['squad']['kills']));
+  int setKills(final jsonPlayerData) {
+    final overallKills = ((jsonPlayerData['global_stats']['solo']['kills']) +
+        (jsonPlayerData['global_stats']['duo']['kills']) +
+        (jsonPlayerData['global_stats']['trio']['kills']) +
+        (jsonPlayerData['global_stats']['squad']['kills']));
     return playerKills = overallKills;
   }
 
-  int setMatchesPlayed(playerJSON) {
-    var overallMatchesPlayed = ((playerJSON['global_stats']['solo']
+  int setMatchesPlayed(final jsonPlayerData) {
+    final overallMatchesPlayed = ((jsonPlayerData['global_stats']['solo']
             ['matchesplayed']) +
-        (playerJSON['global_stats']['duo']['matchesplayed']) +
-        (playerJSON['global_stats']['trio']['matchesplayed']) +
-        (playerJSON['global_stats']['squad']['matchesplayed']));
+        (jsonPlayerData['global_stats']['duo']['matchesplayed']) +
+        (jsonPlayerData['global_stats']['trio']['matchesplayed']) +
+        (jsonPlayerData['global_stats']['squad']['matchesplayed']));
     return playerMatches = overallMatchesPlayed;
   }
 

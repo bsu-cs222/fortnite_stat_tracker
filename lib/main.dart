@@ -28,8 +28,8 @@ class StatTracker extends StatefulWidget {
 }
 class _StatTrackerState extends State<StatTracker>{
   String currentPlayer = '';
-  TextEditingController controller1 = TextEditingController();
-  TextEditingController controller2 = TextEditingController();
+  TextEditingController accountIDInput = TextEditingController();
+  TextEditingController accountPlatformInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _StatTrackerState extends State<StatTracker>{
           hintText: 'Account ID',
           border: OutlineInputBorder()
       ),
-      controller: controller1,
+      controller: accountIDInput,
     );
 
     final platformInput = TextField(
@@ -60,7 +60,7 @@ class _StatTrackerState extends State<StatTracker>{
           hintText: 'Platform (PC, PlayStation, Xbox)',
           border: OutlineInputBorder()
       ),
-      controller: controller2,
+      controller: accountPlatformInput,
     );
 
     final textColumn =  Column(
@@ -125,7 +125,7 @@ class _StatTrackerState extends State<StatTracker>{
           );
             }
     }
-    String organizeStats(PlayerStats player){
+    String organizeStats(PlayerStatsDecoder player){
       String organizedStats = 'Username: ${player.getUsername()}'
           '\nLevel: ${player.getLevel()}\nK/D: ${player.getPlayerKD()}'
           '\nWin Rate: ${player.getPlayerWinRate()}\nEliminations: ${player.getPlayerKills()}\n'
@@ -134,8 +134,8 @@ class _StatTrackerState extends State<StatTracker>{
     }
   void _onButtonPressed()async{
     final fetcher = StatFetcher();
-    final username = controller1.text;
-    final platform = controller2.text;
+    final username = accountIDInput.text;
+    final platform = accountPlatformInput.text;
       final playerID = await fetcher.getID(username);
       if(playerID==null){
         currentPlayer = 'Account ID Invalid';
@@ -143,7 +143,7 @@ class _StatTrackerState extends State<StatTracker>{
 
         });
       }else {
-        final jsonBody = await fetcher.getStatJSON(playerID, platform);
+        String jsonBody = await fetcher.getStatJSON(playerID, platform);
         final playerObj = fetcher.assignStats(jsonBody);
         final stats = organizeStats(playerObj);
         setState(() {
@@ -158,8 +158,8 @@ class _StatTrackerState extends State<StatTracker>{
   void _onPressed(){
     setState(() {
       currentPlayer = '';
-      controller2.clear();
-      controller1.clear();
+      accountPlatformInput.clear();
+      accountIDInput.clear();
     });
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:io';
 import 'package:r6_getter_test/stat_tracker_classes.dart';
 
 void main() {
@@ -9,18 +8,18 @@ void main() {
 
   test('I can get a user ID', () async {
     const username = 'Drewdeshawn';
-    var result = await fetcher.getID(username);
+    final result = await fetcher.getID(username);
     expect(result, startsWith(exampleID));
   });
 
   test('I can get a users stats', () async {
-    var result = await fetcher.getStatJSON(exampleID,platform);
+    final result = await fetcher.getStatJSON(exampleID,platform);
     expect(result, startsWith('{"result":true,"name":"Drewdeshawn","account'));
   });
 
   test('I can store stats', () async {
-    var body = await fetcher.getStatJSON(exampleID,platform);
-    var player = fetcher.assignStats(body);
+    final body = await fetcher.getStatJSON(exampleID,platform);
+    final player = fetcher.assignStats(body);
     expect(player.getMatchesPlayed(), 1589);
   });
 }
