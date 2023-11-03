@@ -27,6 +27,8 @@ class _StatTrackerState extends State<StatTracker> {
   String currentPlayer = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
+  final platformList = <String>["PC", "psn", "xbl"];
+  String playerPlatform = '';
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +52,27 @@ class _StatTrackerState extends State<StatTracker> {
       controller: accountIDInput,
     );
 
-    final platformInput = TextField(
-      decoration: const InputDecoration(
-          hintText: 'Platform (PC, PlayStation, Xbox)',
-          border: OutlineInputBorder()),
-      controller: accountPlatformInput,
+    final platformDropdown = DropdownButton<String>(
+      value: platformList.first,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          playerPlatform = value!;
+        });
+      },
+      items: platformList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
 
     final textColumn = Column(
@@ -62,7 +80,7 @@ class _StatTrackerState extends State<StatTracker> {
       children: [
         usernameInput,
         const SizedBox(height: 10.0, width: 10.0),
-        platformInput,
+        platformDropdown,
         const SizedBox(height: 5.0, width: 5.0),
         ElevatedButton(
             onPressed: _onButtonPressed,
@@ -130,7 +148,7 @@ class _StatTrackerState extends State<StatTracker> {
   void _onButtonPressed() async {
     final fetcher = StatFetcher();
     final username = accountIDInput.text;
-    final platform = accountPlatformInput.text;
+    final platform = playerPlatform;
     final playerID = await fetcher.getID(username);
     if (playerID == null) {
       currentPlayer = 'Account ID Invalid';
