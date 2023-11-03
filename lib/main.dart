@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:r6_getter_test/stat_tracker_classes.dart';
 
-
-
-
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -22,23 +19,23 @@ class MyApp extends StatelessWidget {
 class StatTracker extends StatefulWidget {
   const StatTracker({super.key});
 
-
   @override
   State<StatTracker> createState() => _StatTrackerState();
 }
-class _StatTrackerState extends State<StatTracker>{
+
+class _StatTrackerState extends State<StatTracker> {
   String currentPlayer = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     const homeTitle = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Fortnite Stat\nTracker',
+        Text(
+          'Fortnite Stat\nTracker',
           style: TextStyle(
             color: Colors.blue,
             fontSize: 40,
@@ -49,32 +46,28 @@ class _StatTrackerState extends State<StatTracker>{
 
     final usernameInput = TextField(
       decoration: const InputDecoration(
-          hintText: 'Account ID',
-          border: OutlineInputBorder()
-      ),
+          hintText: 'Account ID', border: OutlineInputBorder()),
       controller: accountIDInput,
     );
 
     final platformInput = TextField(
       decoration: const InputDecoration(
           hintText: 'Platform (PC, PlayStation, Xbox)',
-          border: OutlineInputBorder()
-      ),
+          border: OutlineInputBorder()),
       controller: accountPlatformInput,
     );
 
-    final textColumn =  Column(
+    final textColumn = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         usernameInput,
         const SizedBox(height: 10.0, width: 10.0),
         platformInput,
-        const SizedBox(height:5.0, width: 5.0),
-         ElevatedButton(
+        const SizedBox(height: 5.0, width: 5.0),
+        ElevatedButton(
             onPressed: _onButtonPressed,
-        //searchForAccount,
+            //searchForAccount,
             child: const Text('Search'))
-
       ],
     );
     if (currentPlayer == '') {
@@ -84,78 +77,77 @@ class _StatTrackerState extends State<StatTracker>{
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Expanded(child:
-                homeTitle,
+              const Expanded(
+                child: homeTitle,
               ),
-              Expanded(child:
-                textColumn,
+              Expanded(
+                child: textColumn,
               ),
             ],
-          )
-      );
+          ));
     } else {
       return Scaffold(
-          backgroundColor: Colors.white,
-          body:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey,
-
+        backgroundColor: Colors.grey,
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.blueAccent,
                 ),
-              child: Center(
-                child: Text(currentPlayer,
-                style:  const TextStyle(
-                color: Colors.blue,
-                  fontSize: 40,
-            ),
-            ),
-
-          ),
-            ),
-            ElevatedButton(onPressed: _onPressed,
-              child: const Text('Return to Home'
+                child: Center(
+                  child: Text(
+                    currentPlayer,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                    ),
+                  ),
+                ),
               ),
-            ),
-    ]),
+              ElevatedButton(
+                onPressed: _onPressed,
+                child: const Text('Return to Home'),
+              ),
+            ]),
+      );
+    }
+  }
 
-          );
-            }
-    }
-    String organizeStats(PlayerStatsDecoder player){
-      String organizedStats = 'Username: ${player.getUsername()}'
-          '\nLevel: ${player.getLevel()}\nK/D: ${player.getPlayerKD()}'
-          '\nWin Rate: ${player.getPlayerWinRate()}\nEliminations: ${player.getPlayerKills()}\n'
-          'Matches Played: ${player.getMatchesPlayed()}\n';
-      return organizedStats;
-    }
-  void _onButtonPressed()async{
+  String organizeStats(jsonBody) {
+    final player = PlayerStatsAssigner();
+    player.assignJsonStats(jsonBody);
+    String organizedStats = 'Username: ${player.username}'
+        '\nLevel: ${player.level}\nK/D: ${player.kD}'
+        '\nWin Rate: ${player.winRate}\nEliminations: ${player.winRate}\n'
+        'Matches Played: ${player.matchesPlayed}\n';
+    return organizedStats;
+  }
+
+  void _onButtonPressed() async {
     final fetcher = StatFetcher();
     final username = accountIDInput.text;
     final platform = accountPlatformInput.text;
-      final playerID = await fetcher.getID(username);
-      if(playerID==null){
-        currentPlayer = 'Account ID Invalid';
-        setState(() {
-
-        });
-      }else {
-        String jsonBody = await fetcher.getStatJSON(playerID, platform);
-        final playerObj = fetcher.assignStats(jsonBody);
-        final stats = organizeStats(playerObj);
-        setState(() {
-          try{
-            currentPlayer = stats;
-          } catch (e){
-            currentPlayer = 'There was a network error';
-          }
-        });
-      }
+    final playerID = await fetcher.getID(username);
+    if (playerID == null) {
+      currentPlayer = 'Account ID Invalid';
+      setState(() {});
+    } else {
+      String jsonBody = await fetcher.getStatJSON(playerID, platform);
+      final stats = organizeStats(jsonBody);
+      setState(() {
+        try {
+          currentPlayer = stats;
+        } catch (e) {
+          currentPlayer = 'There was a network error';
+        }
+      });
+    }
   }
-  void _onPressed(){
+
+  void _onPressed() {
     setState(() {
       currentPlayer = '';
       accountPlatformInput.clear();
@@ -163,5 +155,3 @@ class _StatTrackerState extends State<StatTracker>{
     });
   }
 }
-
-

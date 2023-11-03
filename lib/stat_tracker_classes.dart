@@ -40,40 +40,22 @@ class StatFetcher extends JsonDecoder with DataExtractor {
         .get(parsedUrl, headers: {'Authorization': pullString(apiFile)});
     return result.body;
   }
-
-  PlayerStatsDecoder assignStats(String body) {
-    final PlayerStatsDecoder player = PlayerStatsDecoder();
-    player.statDecoder(body);
-    return player;
-  }
 }
 
 class PlayerStatsDecoder extends JsonDecoder {
-  String username = '';
-  int level = 0;
-  double playerKD = 0.0;
-  double playerWinRate = 0.0;
-  int playerKills = 0;
-  int playerMatches = 0;
-
-  void statDecoder(String body) {
+  decodeStats(String body) {
     final jsonPlayerData = decodeJson(body);
-    setUsername(jsonPlayerData);
-    setLevel(jsonPlayerData);
-    setKD(jsonPlayerData);
-    setWinRate(jsonPlayerData);
-    setKills(jsonPlayerData);
-    setMatchesPlayed(jsonPlayerData);
+    return jsonPlayerData;
   }
 
   String setUsername(final jsonPlayerData) {
     final newUsername = jsonPlayerData['name'];
-    return username = newUsername;
+    return newUsername;
   }
 
   int setLevel(final jsonPlayerData) {
     final newLevel = jsonPlayerData['account']['level'];
-    return level = newLevel;
+    return newLevel;
   }
 
   double setKD(final jsonPlayerData) {
@@ -81,7 +63,7 @@ class PlayerStatsDecoder extends JsonDecoder {
         (jsonPlayerData['global_stats']['duo']['kd']) +
         (jsonPlayerData['global_stats']['trio']['kd']) +
         (jsonPlayerData['global_stats']['squad']['kd']) / 4);
-    return playerKD = overallKD;
+    return overallKD;
   }
 
   double setWinRate(final jsonPlayerData) {
@@ -89,7 +71,7 @@ class PlayerStatsDecoder extends JsonDecoder {
         (jsonPlayerData['global_stats']['duo']['winrate']) +
         (jsonPlayerData['global_stats']['trio']['winrate']) +
         (jsonPlayerData['global_stats']['squad']['winrate']) / 4);
-    return playerWinRate = overallWinRate;
+    return overallWinRate;
   }
 
   int setKills(final jsonPlayerData) {
@@ -97,7 +79,7 @@ class PlayerStatsDecoder extends JsonDecoder {
         (jsonPlayerData['global_stats']['duo']['kills']) +
         (jsonPlayerData['global_stats']['trio']['kills']) +
         (jsonPlayerData['global_stats']['squad']['kills']));
-    return playerKills = overallKills;
+    return overallKills;
   }
 
   int setMatchesPlayed(final jsonPlayerData) {
@@ -106,30 +88,25 @@ class PlayerStatsDecoder extends JsonDecoder {
         (jsonPlayerData['global_stats']['duo']['matchesplayed']) +
         (jsonPlayerData['global_stats']['trio']['matchesplayed']) +
         (jsonPlayerData['global_stats']['squad']['matchesplayed']));
-    return playerMatches = overallMatchesPlayed;
+    return overallMatchesPlayed;
   }
+}
 
-  String getUsername() {
-    return username;
-  }
-
-  int getLevel() {
-    return level;
-  }
-
-  double getPlayerKD() {
-    return playerKD;
-  }
-
-  double getPlayerWinRate() {
-    return playerWinRate;
-  }
-
-  int getPlayerKills() {
-    return playerKills;
-  }
-
-  int getMatchesPlayed() {
-    return playerMatches;
+class PlayerStatsAssigner {
+  String username = '';
+  int level = 0;
+  double kD = 0.0;
+  double winRate = 0.0;
+  int eliminations = 0;
+  int matchesPlayed = 0;
+  void assignJsonStats(String body) {
+    final decoder = PlayerStatsDecoder();
+    final decodedData = decoder.decodeStats(body);
+    username = decoder.setUsername(decodedData);
+    level = level + decoder.setLevel(decodedData);
+    kD = decoder.setKD(decodedData);
+    winRate = decoder.setWinRate(decodedData);
+    eliminations = decoder.setKills(decodedData);
+    matchesPlayed = matchesPlayed + decoder.setMatchesPlayed(decodedData);
   }
 }
