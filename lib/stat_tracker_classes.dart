@@ -103,10 +103,10 @@ class PlayerStatsAssigner {
     final decoder = PlayerStatsDecoder();
     final decodedData = decoder.decodeStats(body);
     username = decoder.setUsername(decodedData);
-    level = level + decoder.setLevel(decodedData);
+    level = decoder.setLevel(decodedData);
     kD = decoder.setKD(decodedData);
     winRate = decoder.setWinRate(decodedData);
     eliminations = decoder.setKills(decodedData);
-    matchesPlayed = matchesPlayed + decoder.setMatchesPlayed(decodedData);
+    matchesPlayed = decoder.setMatchesPlayed(decodedData);
   }
 }
