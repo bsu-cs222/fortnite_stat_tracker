@@ -17,7 +17,7 @@ mixin DataExtractor {
 }
 
 class StatFetcher extends JsonDecoder with DataExtractor {
-  final File apiFile = File('lib/Auth');
+  final File apiFile = File('lib/auth');
   Future<String?> getID(username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
     Uri parsedUrl = Uri.parse(url);

@@ -13,12 +13,12 @@ void main() {
   });
 
   test('I can get a users stats', () async {
-    final result = await fetcher.getStatJSON(exampleID,platform);
+    final result = await fetcher.getStatJSON(exampleID, platform);
     expect(result, startsWith('{"result":true,"name":"Drewdeshawn","account'));
   });
 
   test('I can store stats', () async {
-    final body = await fetcher.getStatJSON(exampleID,platform);
+    final body = await fetcher.getStatJSON(exampleID, platform);
     final player = fetcher.assignStats(body);
     expect(player.getMatchesPlayed(), 1589);
   });
