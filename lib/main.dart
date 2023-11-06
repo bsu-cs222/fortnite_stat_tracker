@@ -52,23 +52,28 @@ class _StatTrackerState extends State<StatTracker> {
       controller: accountIDInput,
     );
 
-    final platformDropdown = DropdownButtonFormField<String>(
-        decoration: const InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-          width: 1,
-          color: Colors.grey,
-        ))),
-        value: platformList.first,
-        items: platformList
-            .map((item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(
-                    item,
-                  ),
-                ))
-            .toList(),
-        onChanged: (item) => setState(() => playerPlatform = item!));
+    final platformDropdown = DropdownButton<String>(
+      value: platformList.first,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          playerPlatform = value!;
+        });
+      },
+      items: platformList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
 
     final textColumn = Column(
       mainAxisAlignment: MainAxisAlignment.center,
