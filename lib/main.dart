@@ -27,7 +27,12 @@ class _StatTrackerState extends State<StatTracker> {
   String currentPlayer = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
-  final platformList = <String>["PC", "psn", "xbl"];
+  final platformList = <String>[
+    "Select a platform",
+    "PC",
+    "Playstation",
+    "Xbox"
+  ];
   String playerPlatform = '';
 
   @override
@@ -50,6 +55,7 @@ class _StatTrackerState extends State<StatTracker> {
       decoration: const InputDecoration(
           hintText: 'Account ID', border: OutlineInputBorder()),
       controller: accountIDInput,
+      style: const TextStyle(color: Colors.lightBlue),
     );
 
     final platformDropdown = DropdownButtonFormField<String>(
@@ -65,6 +71,7 @@ class _StatTrackerState extends State<StatTracker> {
                   value: item,
                   child: Text(
                     item,
+                    style: const TextStyle(color: Colors.lightBlue),
                   ),
                 ))
             .toList(),
@@ -129,9 +136,9 @@ class _StatTrackerState extends State<StatTracker> {
     }
   }
 
-  String organizeStats(jsonBody) {
+  String organizeStats(String jsonBody) {
     final player = PlayerStatsAssigner();
-    player.assignJsonStats(jsonBody);
+    player.assignStats(jsonBody);
     String organizedStats = 'Username: ${player.username}'
         '\nLevel: ${player.level}\nK/D: ${double.parse(player.kD.toStringAsFixed(2))}'
         '\nWin Rate: ${double.parse(player.winRate.toStringAsFixed(2))}'

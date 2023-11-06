@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class JsonDecoder {
-  decodeJson(jsonData) {
+  decodeJson(final jsonData) {
     final decoded = jsonDecode(jsonData);
     return decoded;
   }
@@ -18,7 +18,7 @@ mixin DataExtractor {
 
 class StatFetcher extends JsonDecoder with DataExtractor {
   final File apiFile = File('lib/Auth');
-  Future<String?> getID(username) async {
+  Future<String?> getID(String username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
     Uri parsedUrl = Uri.parse(url);
     final http.Response response2 = await http
@@ -99,7 +99,7 @@ class PlayerStatsAssigner {
   double winRate = 0.0;
   int eliminations = 0;
   int matchesPlayed = 0;
-  void assignJsonStats(String body) {
+  void assignStats(String body) {
     final decoder = PlayerStatsDecoder();
     final decodedData = decoder.decodeStats(body);
     username = decoder.setUsername(decodedData);
