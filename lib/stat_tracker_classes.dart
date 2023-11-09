@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class JsonDecoder {
-  decodeJson(final jsonData) {
+  dynamic decodeJson(final jsonData) {
     final decoded = jsonDecode(jsonData);
     return decoded;
   }
@@ -44,23 +44,23 @@ class StatFetcher extends JsonDecoder with DataExtractor {
 
 class PlayerStatsDecoder extends JsonDecoder {
   List<String> gamemodesList = ['solo', 'duo', 'trio', 'squad'];
-  decodeStats(String body) {
+  dynamic decodeStats(String body) {
     final jsonPlayerData = decodeJson(body);
     return jsonPlayerData;
   }
 
   String setUsername(final jsonPlayerData) {
-    final newUsername = jsonPlayerData['name'];
+    String newUsername = jsonPlayerData['name'];
     return newUsername;
   }
 
   int setLevel(final jsonPlayerData) {
-    final newLevel = jsonPlayerData['account']['level'];
+    int newLevel = jsonPlayerData['account']['level'];
     return newLevel;
   }
 
   double setKD(final jsonPlayerData) {
-    final overallKD = ((jsonPlayerData['global_stats']['solo']['kd']) +
+    double overallKD = ((jsonPlayerData['global_stats']['solo']['kd']) +
         (jsonPlayerData['global_stats']['duo']['kd']) +
         (jsonPlayerData['global_stats']['trio']['kd']) +
         (jsonPlayerData['global_stats']['squad']['kd']) / 4);
@@ -68,7 +68,8 @@ class PlayerStatsDecoder extends JsonDecoder {
   }
 
   double setWinRate(final jsonPlayerData) {
-    var overallWinRate = ((jsonPlayerData['global_stats']['solo']['winrate']) +
+    double overallWinRate = ((jsonPlayerData['global_stats']['solo']
+            ['winrate']) +
         (jsonPlayerData['global_stats']['duo']['winrate']) +
         (jsonPlayerData['global_stats']['trio']['winrate']) +
         (jsonPlayerData['global_stats']['squad']['winrate']) / 4);
@@ -76,7 +77,7 @@ class PlayerStatsDecoder extends JsonDecoder {
   }
 
   int setKills(final jsonPlayerData) {
-    final overallKills = ((jsonPlayerData['global_stats']['solo']['kills']) +
+    int overallKills = ((jsonPlayerData['global_stats']['solo']['kills']) +
         (jsonPlayerData['global_stats']['duo']['kills']) +
         (jsonPlayerData['global_stats']['trio']['kills']) +
         (jsonPlayerData['global_stats']['squad']['kills']));
@@ -84,7 +85,7 @@ class PlayerStatsDecoder extends JsonDecoder {
   }
 
   int setMatchesPlayed(final jsonPlayerData) {
-    final overallMatchesPlayed = ((jsonPlayerData['global_stats']['solo']
+    int overallMatchesPlayed = ((jsonPlayerData['global_stats']['solo']
             ['matchesplayed']) +
         (jsonPlayerData['global_stats']['duo']['matchesplayed']) +
         (jsonPlayerData['global_stats']['trio']['matchesplayed']) +
@@ -96,7 +97,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     List<double> kDList = [];
     double kD = 0.0;
     for (int i = 0; i < 4; i++) {
-      kD = jsonPlayerData['global_stats'][gamemodesList[i]]['kd'];
+      kD = jsonPlayerData['global_stats'][gamemodesList[i]]['kd'].toDouble();
       kDList.add(kD);
     }
     return kDList;
@@ -104,9 +105,10 @@ class PlayerStatsDecoder extends JsonDecoder {
 
   List<double> setGamemodeSpecificWinrates(final jsonPlayerData) {
     List<double> winrateList = [];
-    double winrate = 0.0;
     for (int i = 0; i < 4; i++) {
-      winrate = jsonPlayerData['global_stats'][gamemodesList[i]]['winrate'];
+      double winrate = jsonPlayerData['global_stats'][gamemodesList[i]]
+              ['winrate']
+          .toDouble();
       winrateList.add(winrate);
     }
     return winrateList;
@@ -149,7 +151,7 @@ class PlayerStatsAssigner {
 
   void assignAllStats(String body) {
     assignOverallStats(body);
-    assignGamemodeSpecificStats(body);
+    assignGameModeSpecificStats(body);
   }
 
   void assignOverallStats(String body) {
@@ -162,7 +164,7 @@ class PlayerStatsAssigner {
     matchesPlayed = decoder.setMatchesPlayed(decodedData);
   }
 
-  void assignGamemodeSpecificStats(String body) {
+  void assignGameModeSpecificStats(String body) {
     final decodedData = decoder.decodeStats(body);
     gamemodeKDList = decoder.setGamemodeSpecificKDs(decodedData);
     gamemodeWinrateList = decoder.setGamemodeSpecificWinrates(decodedData);
@@ -171,4 +173,14 @@ class PlayerStatsAssigner {
     gamemodeMatchesPlayedList =
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
   }
+}
+
+void main() async {
+  final fetcher = StatFetcher();
+  final decoder = PlayerStatsDecoder();
+  final g = await fetcher.getID('Drewdeshawn');
+  String m = await fetcher.getStatJSON(g!, "psn");
+  final y = decoder.decodeStats(m);
+
+  print(y['global_stats']['solo']['winrate']);
 }
