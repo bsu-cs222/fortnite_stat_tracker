@@ -138,12 +138,13 @@ class _StatTrackerState extends State<StatTracker> {
 
   String organizeStats(String jsonBody) {
     final player = PlayerStatsAssigner();
-    player.assignStats(jsonBody);
+    player.assignAllStats(jsonBody);
     String organizedStats = 'Username: ${player.username}'
         '\nLevel: ${player.level}\nK/D: ${double.parse(player.kD.toStringAsFixed(2))}'
         '\nWin Rate: ${double.parse(player.winRate.toStringAsFixed(2))}'
         '\nEliminations: ${player.eliminations}\n'
-        'Matches Played: ${player.matchesPlayed}\n';
+        'Matches Played: ${player.matchesPlayed}\n'
+        'K/D Solo: ${player.gamemodeKDList}\n';
     return organizedStats;
   }
 
