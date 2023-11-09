@@ -1,25 +1,34 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:r6_getter_test/stat_tracker_classes.dart';
 
 void main() {
-  final StatFetcher fetcher = StatFetcher();
-  String exampleID = '4767a665af914f04b73fe8742a1e083e';
-  String platform = 'pc';
-
-  test('I can get a user ID', () async {
-    const username = 'Drewdeshawn';
-    final result = await fetcher.getID(username);
-    expect(result, startsWith(exampleID));
+  test('I can get a users account level', () {
+    PlayerStatsDecoder decodePlayerStats = PlayerStatsDecoder();
+    File accountFile = File('test/account.json');
+    final String fileContents = accountFile.readAsStringSync();
+    final body = decodePlayerStats.decodeJson(fileContents);
+    int level = decodePlayerStats.setLevel(body);
+    expect(level, 4);
   });
 
-  test('I can get a users stats', () async {
-    final result = await fetcher.getStatJSON(exampleID, platform);
-    expect(result, startsWith('{"result":true,"name":"Drewdeshawn","account'));
+  test('I can get the users overall number of eliminations', () {
+    PlayerStatsDecoder decodePlayerStats = PlayerStatsDecoder();
+    File accountFile = File('test/account.json');
+    final String fileContents = accountFile.readAsStringSync();
+    final body = decodePlayerStats.decodeJson(fileContents);
+    int eliminations = decodePlayerStats.setKills(body);
+    expect(eliminations, 1488);
   });
 
-  test('I can store stats', () async {
-    final body = await fetcher.getStatJSON(exampleID, platform);
-    final player = fetcher.assignStats(body);
-    expect(player.getMatchesPlayed(), 1589);
+  test('I can get the users number of eliminations in the solo game mode', () {
+    PlayerStatsDecoder decodePlayerStats = PlayerStatsDecoder();
+    File accountFile = File('test/account.json');
+    final String fileContents = accountFile.readAsStringSync();
+    final body = decodePlayerStats.decodeJson(fileContents);
+    List eliminationsList =
+        decodePlayerStats.setGamemodeSpecificEliminations(body);
+    int eliminations = eliminationsList[0];
+    expect(eliminations, 551);
   });
 }
