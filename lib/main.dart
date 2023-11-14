@@ -169,31 +169,36 @@ class _StatTrackerState extends State<StatTracker> {
     String organizedStats = '';
     switch (playerGameMode) {
       case 'Overall Stats':
-        organizedStats = 'Username: ${player.username}'
+        organizedStats = 'Overall Stats:'
+            '\nUsername: ${player.username}'
             '\nLevel: ${player.level}\nK/D: ${double.parse(player.kD.toStringAsFixed(2))}'
             '\nWin Rate: ${double.parse(player.winRate.toStringAsFixed(2))}'
             '\nEliminations: ${player.eliminations}\n'
             'Matches Played: ${player.matchesPlayed}\n';
       case 'Solo':
-        organizedStats = 'Username: ${player.username}'
+        organizedStats = 'Solo Stats:'
+            '\nUsername: ${player.username}'
             '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[0].toStringAsFixed(2))}'
             '\nWin Rate: ${double.parse(player.gamemodeWinrateList[0].toStringAsFixed(2))}'
             '\nEliminations: ${player.gamemodeEliminationsList[0]}\n'
             'Matches Played: ${player.gamemodeMatchesPlayedList[0]}\n';
       case 'Duos':
-        organizedStats = 'Username: ${player.username}'
+        organizedStats = 'Duo Stats:'
+            '\nUsername: ${player.username}'
             '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[1].toStringAsFixed(2))}'
             '\nWin Rate: ${double.parse(player.gamemodeWinrateList[1].toStringAsFixed(2))}'
             '\nEliminations: ${player.gamemodeEliminationsList[1]}\n'
             'Matches Played: ${player.gamemodeMatchesPlayedList[1]}\n';
       case 'Trios':
-        organizedStats = 'Username: ${player.username}'
+        organizedStats = 'Trio Stats:'
+            '\nUsername: ${player.username}'
             '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[2].toStringAsFixed(2))}'
             '\nWin Rate: ${double.parse(player.gamemodeWinrateList[2].toStringAsFixed(2))}'
             '\nEliminations: ${player.gamemodeEliminationsList[2]}\n'
             'Matches Played: ${player.gamemodeMatchesPlayedList[2]}\n';
       case 'Squads':
-        organizedStats = 'Username: ${player.username}'
+        organizedStats = 'Squad Stats:'
+            '\nUsername: ${player.username}'
             '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[3].toStringAsFixed(2))}'
             '\nWin Rate: ${double.parse(player.gamemodeWinrateList[3].toStringAsFixed(2))}'
             '\nEliminations: ${player.gamemodeEliminationsList[3]}\n'
