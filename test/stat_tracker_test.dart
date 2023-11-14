@@ -17,11 +17,13 @@ void main() {
     File accountFile = File('test/account.json');
     final String fileContents = accountFile.readAsStringSync();
     final body = decodePlayerStats.decodeJson(fileContents);
-    int eliminations = decodePlayerStats.setKills(body);
+    int eliminations = decodePlayerStats.setOverallKills(body);
     expect(eliminations, 1488);
   });
 
-  test('I can get the users number of eliminations in the solo game mode', () {
+  test(
+      'I can get the users number of eliminations in the solo game mode using a list',
+      () {
     PlayerStatsDecoder decodePlayerStats = PlayerStatsDecoder();
     File accountFile = File('test/account.json');
     final String fileContents = accountFile.readAsStringSync();
