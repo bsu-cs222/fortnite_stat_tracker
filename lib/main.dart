@@ -24,7 +24,7 @@ class StatTracker extends StatefulWidget {
 }
 
 class _StatTrackerState extends State<StatTracker> {
-  String currentPlayer = '';
+  String currentPlayerUsername = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
   final platformList = <String>[
@@ -33,7 +33,7 @@ class _StatTrackerState extends State<StatTracker> {
     "Playstation",
     "Xbox"
   ];
-  final gameModeList = <String>[
+  final gamemodeList = <String>[
     'Select a game mode',
     'Overall Stats',
     'Solo',
@@ -84,15 +84,15 @@ class _StatTrackerState extends State<StatTracker> {
             .toList(),
         onChanged: (item) => setState(() => playerPlatform = item!));
 
-    final gameModeDropDown = DropdownButtonFormField<String>(
+    final gamemodeDropDown = DropdownButtonFormField<String>(
         decoration: const InputDecoration(
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
           width: 1,
           color: Colors.grey,
         ))),
-        value: gameModeList.first,
-        items: gameModeList
+        value: gamemodeList.first,
+        items: gamemodeList
             .map((item) => DropdownMenuItem(
                   value: item,
                   child: Text(
@@ -109,7 +109,7 @@ class _StatTrackerState extends State<StatTracker> {
         const SizedBox(height: 10.0, width: 10.0),
         platformDropdown,
         const SizedBox(height: 10.0, width: 10.0),
-        gameModeDropDown,
+        gamemodeDropDown,
         const SizedBox(height: 5.0, width: 5.0),
         ElevatedButton(
             onPressed: _onButtonPressed,
@@ -117,7 +117,7 @@ class _StatTrackerState extends State<StatTracker> {
             child: const Text('Search'))
       ],
     );
-    if (currentPlayer == '') {
+    if (currentPlayerUsername == '') {
       return Scaffold(
           backgroundColor: Colors.white,
           body: Row(
@@ -146,7 +146,7 @@ class _StatTrackerState extends State<StatTracker> {
                 ),
                 child: Center(
                   child: Text(
-                    currentPlayer,
+                    currentPlayerUsername,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 40,
@@ -164,45 +164,45 @@ class _StatTrackerState extends State<StatTracker> {
   }
 
   String organizeStats(String jsonBody, String playerGameMode) {
-    final player = PlayerStatsAssigner();
+    final player = Player();
     player.assignAllStats(jsonBody);
     String organizedStats = '';
     switch (playerGameMode) {
       case 'Overall Stats':
         organizedStats = 'Overall Stats:'
             '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kD.toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.winRate.toStringAsFixed(2))}'
-            '\nEliminations: ${player.eliminations}\n'
-            'Matches Played: ${player.matchesPlayed}\n';
+            '\nLevel: ${player.level}\nK/D: ${double.parse(player.overallKD.toStringAsFixed(2))}'
+            '\nWin Rate: ${double.parse(player.overallWinRate.toStringAsFixed(2))}'
+            '\nEliminations: ${player.overallEliminations}\n'
+            'Matches Played: ${player.overallMatchesPlayed}\n';
       case 'Solo':
         organizedStats = 'Solo Stats:'
             '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[0].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[0].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[0]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[0]}\n';
+            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kDList[0].toStringAsFixed(2))}'
+            '\nWin Rate: ${double.parse(player.winrateList[0].toStringAsFixed(2))}'
+            '\nEliminations: ${player.eliminationsList[0]}\n'
+            'Matches Played: ${player.matchesPlayedList[0]}\n';
       case 'Duos':
         organizedStats = 'Duo Stats:'
             '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[1].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[1].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[1]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[1]}\n';
+            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kDList[1].toStringAsFixed(2))}'
+            '\nWin Rate: ${double.parse(player.winrateList[1].toStringAsFixed(2))}'
+            '\nEliminations: ${player.eliminationsList[1]}\n'
+            'Matches Played: ${player.matchesPlayedList[1]}\n';
       case 'Trios':
         organizedStats = 'Trio Stats:'
             '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[2].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[2].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[2]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[2]}\n';
+            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kDList[2].toStringAsFixed(2))}'
+            '\nWin Rate: ${double.parse(player.winrateList[2].toStringAsFixed(2))}'
+            '\nEliminations: ${player.eliminationsList[2]}\n'
+            'Matches Played: ${player.matchesPlayedList[2]}\n';
       case 'Squads':
         organizedStats = 'Squad Stats:'
             '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[3].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[3].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[3]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[3]}\n';
+            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kDList[3].toStringAsFixed(2))}'
+            '\nWin Rate: ${double.parse(player.winrateList[3].toStringAsFixed(2))}'
+            '\nEliminations: ${player.eliminationsList[3]}\n'
+            'Matches Played: ${player.matchesPlayedList[3]}\n';
     }
     return organizedStats;
   }
@@ -215,18 +215,18 @@ class _StatTrackerState extends State<StatTracker> {
     if (playerID == null ||
         playerGameMode == '' ||
         playerPlatform == '' ||
-        playerGameMode == gameModeList[0] ||
+        playerGameMode == gamemodeList[0] ||
         playerPlatform == platformList[0]) {
-      currentPlayer = 'Account ID Invalid';
+      currentPlayerUsername = 'Account ID Invalid';
       setState(() {});
     } else {
       String jsonBody = await fetcher.getStatJSON(playerID, platform);
       final stats = organizeStats(jsonBody, playerGameMode);
       setState(() {
         try {
-          currentPlayer = stats;
+          currentPlayerUsername = stats;
         } catch (e) {
-          currentPlayer = 'There was a network error';
+          currentPlayerUsername = 'There was a network error';
         }
       });
     }
@@ -234,7 +234,7 @@ class _StatTrackerState extends State<StatTracker> {
 
   void _onPressed() {
     setState(() {
-      currentPlayer = '';
+      currentPlayerUsername = '';
       accountPlatformInput.clear();
       accountIDInput.clear();
     });
