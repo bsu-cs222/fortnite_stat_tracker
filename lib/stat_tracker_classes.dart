@@ -174,13 +174,3 @@ class PlayerStatsAssigner {
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
   }
 }
-
-void main() async {
-  final fetcher = StatFetcher();
-  final decoder = PlayerStatsDecoder();
-  final g = await fetcher.getID('Drewdeshawn');
-  String m = await fetcher.getStatJSON(g!, "psn");
-  final y = decoder.decodeStats(m);
-
-  print(y['global_stats']['solo']['winrate']);
-}

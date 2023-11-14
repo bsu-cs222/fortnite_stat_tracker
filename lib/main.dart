@@ -53,7 +53,7 @@ class _StatTrackerState extends State<StatTracker> {
         Text(
           'Fortnite Stat\nTracker',
           style: TextStyle(
-            color: Colors.blue,
+            color: Colors.blueAccent,
             fontSize: 40,
           ),
         ),
@@ -61,8 +61,12 @@ class _StatTrackerState extends State<StatTracker> {
     );
 
     final usernameInput = TextField(
+      style: const TextStyle(color: Colors.amber, fontSize: 20),
       decoration: const InputDecoration(
-          hintText: 'Account ID', border: OutlineInputBorder()),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 1, color: Colors.amber)),
+          hintText: 'Account ID',
+          hintStyle: TextStyle(fontSize: 20, color: Colors.amber)),
       controller: accountIDInput,
     );
 
@@ -71,15 +75,16 @@ class _StatTrackerState extends State<StatTracker> {
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
           width: 1,
-          color: Colors.grey,
+          color: Colors.amber,
         ))),
+        dropdownColor: Colors.black,
         value: platformList.first,
         items: platformList
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(
-                    item,
-                  ),
+                  child: Text(item,
+                      style:
+                          const TextStyle(color: Colors.amber, fontSize: 20)),
                 ))
             .toList(),
         onChanged: (item) => setState(() => playerPlatform = item!));
@@ -89,15 +94,16 @@ class _StatTrackerState extends State<StatTracker> {
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
           width: 1,
-          color: Colors.grey,
+          color: Colors.amber,
         ))),
+        dropdownColor: Colors.black,
         value: gameModeList.first,
         items: gameModeList
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(
-                    item,
-                  ),
+                  child: Text(item,
+                      style:
+                          const TextStyle(color: Colors.amber, fontSize: 20)),
                 ))
             .toList(),
         onChanged: (item) => setState(() => playerGameMode = item!));
@@ -114,12 +120,15 @@ class _StatTrackerState extends State<StatTracker> {
         ElevatedButton(
             onPressed: _onButtonPressed,
             //searchForAccount,
-            child: const Text('Search'))
+            child: const Text(
+              'Search',
+              style: TextStyle(color: Colors.black),
+            ))
       ],
     );
     if (currentPlayer == '') {
       return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           body: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +143,7 @@ class _StatTrackerState extends State<StatTracker> {
           ));
     } else {
       return Scaffold(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.black,
         body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,13 +151,13 @@ class _StatTrackerState extends State<StatTracker> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.blueAccent,
+                  color: Colors.black,
                 ),
                 child: Center(
                   child: Text(
                     currentPlayer,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.amber,
                       fontSize: 40,
                     ),
                   ),
@@ -156,7 +165,10 @@ class _StatTrackerState extends State<StatTracker> {
               ),
               ElevatedButton(
                 onPressed: _onPressed,
-                child: const Text('Return to Home'),
+                child: const Text(
+                  'Return to Home',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ]),
       );
@@ -234,6 +246,7 @@ class _StatTrackerState extends State<StatTracker> {
 
   void _onPressed() {
     setState(() {
+      playerGameMode = '';
       currentPlayer = '';
       accountPlatformInput.clear();
       accountIDInput.clear();
