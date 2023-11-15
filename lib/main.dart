@@ -118,7 +118,7 @@ class _StatTrackerState extends State<StatTracker> {
         gameModeDropDown,
         const SizedBox(height: 5.0, width: 5.0),
         ElevatedButton(
-            onPressed: _onButtonPressed,
+            onPressed: _onSearchButtonPressed,
             //searchForAccount,
             child: const Text(
               'Search',
@@ -164,7 +164,7 @@ class _StatTrackerState extends State<StatTracker> {
                 ),
               ),
               ElevatedButton(
-                onPressed: _onPressed,
+                onPressed: _onReturnHomeButtonPressed,
                 child: const Text(
                   'Return to Home',
                   style: TextStyle(color: Colors.black),
@@ -175,51 +175,40 @@ class _StatTrackerState extends State<StatTracker> {
     }
   }
 
-  String organizeStats(String jsonBody, String playerGameMode) {
+  String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
     final player = PlayerStatsAssigner();
-    player.assignAllStats(jsonBody);
+    player.assignAllStats(jsonPlayerData);
     String organizedStats = '';
-    switch (playerGameMode) {
-      case 'Overall Stats':
-        organizedStats = 'Overall Stats:'
-            '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.kD.toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.winRate.toStringAsFixed(2))}'
-            '\nEliminations: ${player.eliminations}\n'
-            'Matches Played: ${player.matchesPlayed}\n';
-      case 'Solo':
-        organizedStats = 'Solo Stats:'
-            '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[0].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[0].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[0]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[0]}\n';
-      case 'Duos':
-        organizedStats = 'Duo Stats:'
-            '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[1].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[1].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[1]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[1]}\n';
-      case 'Trios':
-        organizedStats = 'Trio Stats:'
-            '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[2].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[2].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[2]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[2]}\n';
-      case 'Squads':
-        organizedStats = 'Squad Stats:'
-            '\nUsername: ${player.username}'
-            '\nLevel: ${player.level}\nK/D: ${double.parse(player.gamemodeKDList[3].toStringAsFixed(2))}'
-            '\nWin Rate: ${double.parse(player.gamemodeWinrateList[3].toStringAsFixed(2))}'
-            '\nEliminations: ${player.gamemodeEliminationsList[3]}\n'
-            'Matches Played: ${player.gamemodeMatchesPlayedList[3]}\n';
-    }
+    organizedStats = buildStringForStats(player, playerGameMode);
     return organizedStats;
   }
 
-  void _onButtonPressed() async {
+  String buildStringForStats(
+      PlayerStatsAssigner assigner, String playerGameMode) {
+    int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 2;
+    String organizedData = '';
+    int decimalPlaceLimit = 2;
+    if (playerGameMode == 'Overall Stats') {
+      organizedData = '$playerGameMode:'
+          '\nUsername: ${assigner.username}'
+          '\nLevel: ${assigner.level}\n'
+          'K/D: ${double.parse(assigner.kD.toStringAsFixed(decimalPlaceLimit))}'
+          '\nWin Rate: ${double.parse(assigner.winRate.toStringAsFixed(decimalPlaceLimit))}'
+          '\nEliminations: ${assigner.eliminations}\n'
+          'Matches Played: ${assigner.matchesPlayed}\n';
+    } else {
+      organizedData = '$playerGameMode:'
+          '\nUsername: ${assigner.username}'
+          '\nLevel: ${assigner.level}'
+          '\nK/D: ${double.parse(assigner.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlaceLimit))}'
+          '\nWin Rate: ${double.parse(assigner.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlaceLimit))}'
+          '\nEliminations: ${assigner.gamemodeEliminationsList[gameModeIndex]}\n'
+          'Matches Played: ${assigner.gamemodeMatchesPlayedList[gameModeIndex]}\n';
+    }
+    return organizedData;
+  }
+
+  void _onSearchButtonPressed() async {
     final fetcher = StatFetcher();
     final username = accountIDInput.text;
     final platform = playerPlatform;
@@ -229,11 +218,12 @@ class _StatTrackerState extends State<StatTracker> {
         playerPlatform == '' ||
         playerGameMode == gameModeList[0] ||
         playerPlatform == platformList[0]) {
-      currentPlayer = 'Account ID Invalid';
-      setState(() {});
+      setState(() {
+        currentPlayer = 'Invalid Input';
+      });
     } else {
-      String jsonBody = await fetcher.getStatJSON(playerID, platform);
-      final stats = organizeStats(jsonBody, playerGameMode);
+      String jsonPlayerData = await fetcher.getStatJSON(playerID, platform);
+      final stats = organizeStatsInString(jsonPlayerData, playerGameMode);
       setState(() {
         try {
           currentPlayer = stats;
@@ -244,7 +234,7 @@ class _StatTrackerState extends State<StatTracker> {
     }
   }
 
-  void _onPressed() {
+  void _onReturnHomeButtonPressed() {
     setState(() {
       playerGameMode = '';
       currentPlayer = '';
