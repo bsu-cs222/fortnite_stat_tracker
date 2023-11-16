@@ -176,10 +176,10 @@ class _StatTrackerState extends State<StatTracker> {
   }
 
   String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
-    final player = PlayerStatsAssigner();
-    player.assignAllStats(jsonPlayerData);
+    final searchedPlayer = PlayerStatsAssigner();
+    searchedPlayer.assignAllStats(jsonPlayerData);
     String organizedStats = '';
-    organizedStats = buildStringForStats(player, playerGameMode);
+    organizedStats = buildStringForStats(searchedPlayer, playerGameMode);
     return organizedStats;
   }
 
