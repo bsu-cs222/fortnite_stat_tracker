@@ -17,7 +17,7 @@ void main() {
     File accountFile = File('test/account.json');
     final String fileContents = accountFile.readAsStringSync();
     final body = decodePlayerStats.decodeJson(fileContents);
-    int eliminations = decodePlayerStats.setOverallKills(body);
+    int eliminations = decodePlayerStats.setKills(body);
     expect(eliminations, 1488);
   });
 
