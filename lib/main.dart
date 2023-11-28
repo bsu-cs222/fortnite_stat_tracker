@@ -27,14 +27,8 @@ class _StatTrackerState extends State<StatTracker> {
   String currentPlayer = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
-  final platformList = <String>[
-    "Select a platform",
-    "PC",
-    "Playstation",
-    "Xbox"
-  ];
+  final platformList = <String>["PC", "Playstation", "Xbox"];
   final gameModeList = <String>[
-    'Select a game mode',
     'Overall Stats',
     'Solo',
     'Duos',
@@ -78,7 +72,6 @@ class _StatTrackerState extends State<StatTracker> {
           color: Colors.amber,
         ))),
         dropdownColor: Colors.black,
-        value: platformList.first,
         items: platformList
             .map((item) => DropdownMenuItem(
                   value: item,
@@ -87,6 +80,12 @@ class _StatTrackerState extends State<StatTracker> {
                           const TextStyle(color: Colors.amber, fontSize: 20)),
                 ))
             .toList(),
+        isDense: true,
+        isExpanded: true,
+        hint: const Align(
+            alignment: Alignment.topLeft,
+            child: Text("Select a platform",
+                style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => setState(() => playerPlatform = item!));
 
     final gameModeDropDown = DropdownButtonFormField<String>(
@@ -97,7 +96,6 @@ class _StatTrackerState extends State<StatTracker> {
           color: Colors.amber,
         ))),
         dropdownColor: Colors.black,
-        value: gameModeList.first,
         items: gameModeList
             .map((item) => DropdownMenuItem(
                   value: item,
@@ -106,6 +104,12 @@ class _StatTrackerState extends State<StatTracker> {
                           const TextStyle(color: Colors.amber, fontSize: 20)),
                 ))
             .toList(),
+        isDense: true,
+        isExpanded: true,
+        hint: const Align(
+            alignment: Alignment.topLeft,
+            child: Text("Select a gamemode",
+                style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => setState(() => playerGameMode = item!));
 
     final textColumn = Column(
@@ -176,10 +180,10 @@ class _StatTrackerState extends State<StatTracker> {
   }
 
   String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
-    final player = PlayerStatsAssigner();
-    player.assignAllStats(jsonPlayerData);
+    final searchedAccount = PlayerStatsAssigner();
+    searchedAccount.assignAllStats(jsonPlayerData);
     String organizedStats = '';
-    organizedStats = buildStringForStats(player, playerGameMode);
+    organizedStats = buildStringForStats(searchedAccount, playerGameMode);
     return organizedStats;
   }
 
@@ -210,10 +214,10 @@ class _StatTrackerState extends State<StatTracker> {
 
   void _onSearchButtonPressed() async {
     final fetcher = StatFetcher();
-    final username = accountIDInput.text;
-    final platform = playerPlatform;
-    final playerID = await fetcher.getID(username);
-    if (playerID == null ||
+    final currentUsername = accountIDInput.text;
+    final currentPlatform = playerPlatform;
+    final currentPlayerID = await fetcher.getID(currentUsername);
+    if (currentPlayerID == null ||
         playerGameMode == '' ||
         playerPlatform == '' ||
         playerGameMode == gameModeList[0] ||
@@ -222,7 +226,8 @@ class _StatTrackerState extends State<StatTracker> {
         currentPlayer = 'Invalid Input';
       });
     } else {
-      String jsonPlayerData = await fetcher.getStatJSON(playerID, platform);
+      String jsonPlayerData =
+          await fetcher.getStatJSON(currentPlayerID, currentPlatform);
       final stats = organizeStatsInString(jsonPlayerData, playerGameMode);
       setState(() {
         try {
