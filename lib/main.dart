@@ -181,7 +181,9 @@ class _StatTrackerState extends State<StatTracker> {
 
   String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
     final searchedAccount = PlayerStatsAssigner();
-    searchedAccount.assignAllStats(jsonPlayerData);
+    final decoder = JsonDecoder();
+    dynamic decodedStats = decoder.decodeJson(jsonPlayerData);
+    searchedAccount.assignAllStats(decodedStats);
     String organizedStats = '';
     organizedStats = buildStringForStats(searchedAccount, playerGameMode);
     return organizedStats;
@@ -219,9 +221,7 @@ class _StatTrackerState extends State<StatTracker> {
     final currentPlayerID = await fetcher.getID(currentUsername);
     if (currentPlayerID == null ||
         playerGameMode == '' ||
-        playerPlatform == '' ||
-        playerGameMode == gameModeList[0] ||
-        playerPlatform == platformList[0]) {
+        playerPlatform == '') {
       setState(() {
         currentPlayer = 'Invalid Input';
       });

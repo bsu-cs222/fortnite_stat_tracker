@@ -44,10 +44,6 @@ class StatFetcher extends JsonDecoder with DataExtractor {
 
 class PlayerStatsDecoder extends JsonDecoder {
   List<String> gamemodesList = ['solo', 'duo', 'trio', 'squad'];
-  dynamic decodeStats(String body) {
-    final jsonPlayerData = decodeJson(body);
-    return jsonPlayerData;
-  }
 
   String setUsername(final jsonPlayerData) {
     String newUsername = jsonPlayerData['name'];
@@ -149,13 +145,12 @@ class PlayerStatsAssigner {
   List<int> gamemodeEliminationsList = [];
   List<int> gamemodeMatchesPlayedList = [];
 
-  void assignAllStats(String body) {
-    assignOverallStats(body);
-    assignGameModeSpecificStats(body);
+  void assignAllStats(dynamic decodedData) {
+    assignOverallStats(decodedData);
+    assignGameModeSpecificStats(decodedData);
   }
 
-  void assignOverallStats(String body) {
-    final decodedData = decoder.decodeStats(body);
+  void assignOverallStats(dynamic decodedData) {
     username = decoder.setUsername(decodedData);
     level = decoder.setLevel(decodedData);
     kD = decoder.setKD(decodedData);
@@ -164,8 +159,7 @@ class PlayerStatsAssigner {
     matchesPlayed = decoder.setMatchesPlayed(decodedData);
   }
 
-  void assignGameModeSpecificStats(String body) {
-    final decodedData = decoder.decodeStats(body);
+  void assignGameModeSpecificStats(dynamic decodedData) {
     gamemodeKDList = decoder.setGamemodeSpecificKDs(decodedData);
     gamemodeWinrateList = decoder.setGamemodeSpecificWinrates(decodedData);
     gamemodeEliminationsList =
