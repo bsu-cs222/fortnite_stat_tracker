@@ -10,20 +10,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Fortnite Stat Tracker App',
-      home: StatTracker(),
+      home: StatTrackerApplication(),
     );
   }
 }
 
 // Define a custom Form widget.
-class StatTracker extends StatefulWidget {
-  const StatTracker({super.key});
+class StatTrackerApplication extends StatefulWidget {
+  const StatTrackerApplication({super.key});
 
   @override
-  State<StatTracker> createState() => _StatTrackerState();
+  State<StatTrackerApplication> createState() => _StatTrackerApplicationState();
 }
 
-class _StatTrackerState extends State<StatTracker> {
+class _StatTrackerApplicationState extends State<StatTrackerApplication> {
   String currentPlayer = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
@@ -108,7 +108,7 @@ class _StatTrackerState extends State<StatTracker> {
         isExpanded: true,
         hint: const Align(
             alignment: Alignment.topLeft,
-            child: Text("Select a gamemode",
+            child: Text("Select a Game Mode",
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => setState(() => playerGameMode = item!));
 
@@ -127,7 +127,7 @@ class _StatTrackerState extends State<StatTracker> {
             child: const Text(
               'Search',
               style: TextStyle(color: Colors.black),
-            ))
+            )),
       ],
     );
     if (currentPlayer == '') {
