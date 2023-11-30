@@ -167,40 +167,28 @@ class Player {
     gamemodeMatchesPlayedList =
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
   }
+
+  dynamic sortByStat(String stat) {
+    switch (stat) {
+      case 'KD':
+        return kD;
+
+      case 'winRate':
+        return winRate;
+
+      case 'eliminations':
+        return eliminations;
+
+      case 'matchesPlayed':
+        return matchesPlayed;
+    }
+  }
 }
 
 class AccountSorter {
-  void sortAccounts(List<Player> leaderboard) {
-    _quickSort(leaderboard, 0, leaderboard.length - 1);
-  }
-
-  void _quickSort(List<Player> leaderboard, int lowIndex, int highIndex) {
-    if (lowIndex >= highIndex) {
-      return;
-    }
-    int partitionIndex = _partition(leaderboard, lowIndex, highIndex);
-    _quickSort(leaderboard, lowIndex, partitionIndex - 1);
-    _quickSort(leaderboard, partitionIndex + 1, highIndex);
-  }
-
-  int _partition(List<Player> leaderboard, int lowIndex, int highIndex) {
-    double pivotStat = leaderboard[highIndex].kD;
-    int i = lowIndex - 1;
-
-    for (int j = lowIndex; j > highIndex; j++) {
-      if (leaderboard[j].kD >= pivotStat) {
-        i++;
-
-        Player temp = leaderboard[i];
-        leaderboard[i] = leaderboard[j];
-        leaderboard[j] = temp;
-      }
-    }
-
-    Player temp = leaderboard[i + 1];
-    leaderboard[i + 1] = leaderboard[highIndex];
-    leaderboard[highIndex] = temp;
-
-    return i + 1;
+  List<Player> sortAccounts(List<Player> leaderboard, stat) {
+    leaderboard
+        .sort((a, b) => b.sortByStat(stat).compareTo(a.sortByStat(stat)));
+    return leaderboard;
   }
 }

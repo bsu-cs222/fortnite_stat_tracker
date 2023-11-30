@@ -7,6 +7,24 @@ void main() {
   File accountFile = File('test/account.json');
   final String fileContents = accountFile.readAsStringSync();
   final body = decodePlayerStats.decodeJson(fileContents);
+  AccountSorter sortPlayers = AccountSorter();
+  Player player1 = Player();
+  Player player2 = Player();
+  Player player3 = Player();
+
+  player1.assignOverallStats(body);
+
+  File accountFile2 = File('test/account2.json');
+  final String fileContents2 = accountFile2.readAsStringSync();
+  final body2 = decodePlayerStats.decodeJson(fileContents2);
+  player2.assignOverallStats(body2);
+
+  File accountFile3 = File('test/account3.json');
+  final String fileContents3 = accountFile3.readAsStringSync();
+  final body3 = decodePlayerStats.decodeJson(fileContents3);
+  player3.assignOverallStats(body3);
+
+  List<Player> playerList = [player1, player2, player3];
 
   test('I can get a users account level', () {
     int level = decodePlayerStats.setLevel(body);
@@ -27,26 +45,14 @@ void main() {
     expect(eliminations, 551);
   });
 
-  test('I can create a leaderboard', () {
-    AccountSorter sortPlayers = AccountSorter();
-    Player player1 = Player();
-    Player player2 = Player();
-    Player player3 = Player();
+  test('I can sort a list', () {
+    List<Player> sortedPlayerList = sortPlayers.sortAccounts(playerList, "KD");
+    expect(sortedPlayerList[0].username, player2.username);
+  });
 
-    player1.assignOverallStats(body);
-
-    File accountFile2 = File('test/account2.json');
-    final String fileContents2 = accountFile2.readAsStringSync();
-    final body2 = decodePlayerStats.decodeJson(fileContents2);
-    player2.assignOverallStats(body2);
-
-    File accountFile3 = File('test/account3.json');
-    final String fileContents3 = accountFile3.readAsStringSync();
-    final body3 = decodePlayerStats.decodeJson(fileContents3);
-    player3.assignOverallStats(body3);
-
-    List<Player> playerList = [player1, player2, player3];
-    sortPlayers.sortAccounts(playerList);
-    expect(playerList[0].username, player3.username);
+  test('I can sort a list based on a different stat', () {
+    List<Player> sortedPlayerList =
+        sortPlayers.sortAccounts(playerList, "eliminations");
+    expect(sortedPlayerList[0].username, player3.username);
   });
 }
