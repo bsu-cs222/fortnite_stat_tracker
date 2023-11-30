@@ -48,7 +48,7 @@ void main() {
   test('I can sort a list of player objects based on their overall KD', () {
     List<Player> sortedPlayerList =
         sortPlayers.sortAccountsByOverallStat(playerList, "KD");
-    expect(sortedPlayerList[0].username, player2.username);
+    expect(sortedPlayerList[0].username, player3.username);
   });
 
   test(
@@ -61,7 +61,13 @@ void main() {
 
   test('I can sort a list of player objects based on solo KD', () {
     List<Player> sortedPlayerList =
-        sortPlayers.sortAccountByGamemodeStat(playerList);
+        sortPlayers.sortAccountByGamemodeStat(playerList, "KD", "solo");
     expect(sortedPlayerList[0].username, player3.username);
+  });
+
+  test('I can sort a list of player objects based on trio winrate', () {
+    List<Player> sortedPlayerList =
+        sortPlayers.sortAccountByGamemodeStat(playerList, "winRate", "trio");
+    expect(sortedPlayerList[1].username, player1.username);
   });
 }

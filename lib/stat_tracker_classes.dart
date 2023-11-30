@@ -160,7 +160,7 @@ class Player {
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
   }
 
-  dynamic sortByStat(String stat) {
+  dynamic returnOverallStat(String stat) {
     switch (stat) {
       case 'KD':
         return kD;
@@ -172,18 +172,49 @@ class Player {
         return matchesPlayed;
     }
   }
+
+  int determineGamemode(String gamemode) {
+    switch (gamemode) {
+      case 'solo':
+        return 0;
+      case 'duo':
+        return 1;
+      case 'trio':
+        return 2;
+      case 'squad':
+        return 3;
+      default:
+        throw const FormatException();
+    }
+  }
+
+  dynamic returnSpecificGamemodeStat(String stat, String gamemode) {
+    switch (stat) {
+      case 'KD':
+        return gamemodeKDList[determineGamemode(gamemode)];
+      case 'winRate':
+        return gamemodeWinrateList[determineGamemode(gamemode)];
+      case 'eliminations':
+        return gamemodeEliminationsList[determineGamemode(gamemode)];
+      case 'matchesPlayed':
+        return gamemodeMatchesPlayedList[determineGamemode(gamemode)];
+    }
+  }
 }
 
 class AccountSorter {
-  List<Player> sortAccountsByOverallStat(List<Player> leaderboard, stat) {
-    leaderboard
-        .sort((a, b) => b.sortByStat(stat).compareTo(a.sortByStat(stat)));
+  List<Player> sortAccountsByOverallStat(
+      List<Player> leaderboard, String stat) {
+    leaderboard.sort((a, b) =>
+        b.returnOverallStat(stat).compareTo(a.returnOverallStat(stat)));
     return leaderboard;
   }
 
-  List<Player> sortAccountByGamemodeStat(List<Player> leaderboard) {
-    leaderboard
-        .sort((a, b) => b.gamemodeKDList[0].compareTo(a.gamemodeKDList[0]));
+  List<Player> sortAccountByGamemodeStat(
+      List<Player> leaderboard, String stat, String gamemode) {
+    leaderboard.sort((a, b) => b
+        .returnSpecificGamemodeStat(stat, gamemode)
+        .compareTo(a.returnSpecificGamemodeStat(stat, gamemode)));
     return leaderboard;
   }
 }
