@@ -180,7 +180,7 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
   }
 
   String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
-    final searchedAccount = PlayerStatsAssigner();
+    final searchedAccount = Player();
     final decoder = JsonDecoder();
     dynamic decodedStats = decoder.decodeJson(jsonPlayerData);
     searchedAccount.assignAllStats(decodedStats);
@@ -189,8 +189,7 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
     return organizedStats;
   }
 
-  String buildStringForStats(
-      PlayerStatsAssigner assigner, String playerGameMode) {
+  String buildStringForStats(Player assigner, String playerGameMode) {
     int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 2;
     String organizedData = '';
     int decimalPlaceLimit = 2;

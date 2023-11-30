@@ -132,7 +132,7 @@ class PlayerStatsDecoder extends JsonDecoder {
   }
 }
 
-class PlayerStatsAssigner {
+class Player {
   final decoder = PlayerStatsDecoder();
   String username = '';
   int level = 0;
@@ -166,5 +166,41 @@ class PlayerStatsAssigner {
         decoder.setGamemodeSpecificEliminations(decodedData);
     gamemodeMatchesPlayedList =
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
+  }
+}
+
+class AccountSorter {
+  void sortAccounts(List<Player> leaderboard) {
+    _quickSort(leaderboard, 0, leaderboard.length - 1);
+  }
+
+  void _quickSort(List<Player> leaderboard, int lowIndex, int highIndex) {
+    if (lowIndex >= highIndex) {
+      return;
+    }
+    int partitionIndex = _partition(leaderboard, lowIndex, highIndex);
+    _quickSort(leaderboard, lowIndex, partitionIndex - 1);
+    _quickSort(leaderboard, partitionIndex + 1, highIndex);
+  }
+
+  int _partition(List<Player> leaderboard, int lowIndex, int highIndex) {
+    double pivotStat = leaderboard[highIndex].kD;
+    int i = lowIndex - 1;
+
+    for (int j = lowIndex; j < highIndex; j++) {
+      if (leaderboard[j].kD <= pivotStat) {
+        i++;
+
+        Player temp = leaderboard[i];
+        leaderboard[i] = leaderboard[j];
+        leaderboard[j] = temp;
+      }
+    }
+
+    Player temp = leaderboard[i + 1];
+    leaderboard[i + 1] = leaderboard[highIndex];
+    leaderboard[highIndex] = temp;
+
+    return i + 1;
   }
 }
