@@ -24,7 +24,7 @@ class StatTrackerApplication extends StatefulWidget {
 }
 
 class _StatTrackerApplicationState extends State<StatTrackerApplication> {
-  String currentPlayer = '';
+  String displayedOnScreen = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
   final platformList = <String>["PC", "Playstation", "Xbox"];
@@ -130,21 +130,95 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
             )),
       ],
     );
-    if (currentPlayer == '') {
+    if (displayedOnScreen == '') {
+      return LayoutBuilder(builder: (context, constraints) {
+        return Scaffold(
+            backgroundColor: Colors.black,
+            body: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SafeArea(
+                  child: NavigationRail(
+                      backgroundColor: Colors.black26,
+                      extended: constraints.maxWidth >= 600,
+                      destinations: [
+                        NavigationRailDestination(
+                          icon: IconButton(
+                            onPressed: _onIconPressed,
+                            icon: const Icon(
+                              Icons.house,
+                            ),
+                            color: Colors.amber,
+                          ),
+                          label: const Text(
+                            'Home',
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                        NavigationRailDestination(
+                          icon: IconButton(
+                            onPressed: _onCastleIconPressed,
+                            icon: const Icon(
+                              Icons.castle_rounded,
+                            ),
+                            color: Colors.amber,
+                          ),
+                          label: const Text(
+                            'LeaderBoard',
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                      ],
+                      selectedIndex: 0,
+                      onDestinationSelected: (value) {
+                        setState(() {
+                          value = 0;
+                        });
+                      }),
+                ),
+                const Expanded(
+                  child: homeTitle,
+                ),
+                Expanded(
+                  child: textColumn,
+                ),
+              ],
+            ));
+      });
+    } else if (displayedOnScreen == 'leaderboard') {
       return Scaffold(
-          backgroundColor: Colors.black,
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Expanded(
-                child: homeTitle,
+        backgroundColor: Colors.black,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                color: Colors.black,
               ),
-              Expanded(
-                child: textColumn,
+              child: const Center(
+                child: Text(
+                  'Here is my leaderboard',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 60,
+                  ),
+                ),
               ),
-            ],
-          ));
+            ),
+            ElevatedButton(
+              onPressed: _returnHomeFromLeaderBoard,
+              child: const Text('home', style: TextStyle(color: Colors.amber)),
+            ),
+          ],
+        ),
+      );
     } else {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -159,7 +233,7 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
                 ),
                 child: Center(
                   child: Text(
-                    currentPlayer,
+                    displayedOnScreen,
                     style: const TextStyle(
                       color: Colors.amber,
                       fontSize: 40,
@@ -222,7 +296,7 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
         playerGameMode == '' ||
         playerPlatform == '') {
       setState(() {
-        currentPlayer = 'Invalid Input';
+        displayedOnScreen = 'Invalid Input';
       });
     } else {
       String jsonPlayerData =
@@ -230,9 +304,9 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
       final stats = organizeStatsInString(jsonPlayerData, playerGameMode);
       setState(() {
         try {
-          currentPlayer = stats;
+          displayedOnScreen = stats;
         } catch (e) {
-          currentPlayer = 'There was a network error';
+          displayedOnScreen = 'There was a network error';
         }
       });
     }
@@ -241,9 +315,30 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
   void _onReturnHomeButtonPressed() {
     setState(() {
       playerGameMode = '';
-      currentPlayer = '';
+      displayedOnScreen = '';
       accountPlatformInput.clear();
       accountIDInput.clear();
+    });
+  }
+
+  void _onIconPressed() {
+    setState(() {
+      displayedOnScreen = '';
+      playerGameMode = '';
+      accountPlatformInput.clear();
+      accountIDInput.clear();
+    });
+  }
+
+  void _onCastleIconPressed() {
+    setState(() {
+      displayedOnScreen = 'leaderboard';
+    });
+  }
+
+  void _returnHomeFromLeaderBoard() {
+    setState(() {
+      displayedOnScreen = '';
     });
   }
 }
