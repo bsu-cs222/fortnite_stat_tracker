@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -9,14 +8,7 @@ class JsonDecoder {
   }
 }
 
-mixin DataExtractor {
-  String pullString(File file) {
-    String fileData = file.readAsStringSync();
-    return fileData;
-  }
-}
-
-class StatFetcher extends JsonDecoder with DataExtractor {
+class StatFetcher extends JsonDecoder {
   //final File apiFile = File('lib/Auth.txt');
   Future<String?> getID(String username) async {
     final url = "https://fortniteapi.io/v1/lookup?username=$username";
@@ -172,13 +164,10 @@ class Player {
     switch (stat) {
       case 'KD':
         return kD;
-
       case 'winRate':
         return winRate;
-
       case 'eliminations':
         return eliminations;
-
       case 'matchesPlayed':
         return matchesPlayed;
     }
@@ -186,9 +175,15 @@ class Player {
 }
 
 class AccountSorter {
-  List<Player> sortAccounts(List<Player> leaderboard, stat) {
+  List<Player> sortAccountsByOverallStat(List<Player> leaderboard, stat) {
     leaderboard
         .sort((a, b) => b.sortByStat(stat).compareTo(a.sortByStat(stat)));
+    return leaderboard;
+  }
+
+  List<Player> sortAccountByGamemodeStat(List<Player> leaderboard) {
+    leaderboard
+        .sort((a, b) => b.gamemodeKDList[0].compareTo(a.gamemodeKDList[0]));
     return leaderboard;
   }
 }

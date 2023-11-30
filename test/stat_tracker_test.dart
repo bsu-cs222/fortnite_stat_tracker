@@ -12,17 +12,17 @@ void main() {
   Player player2 = Player();
   Player player3 = Player();
 
-  player1.assignOverallStats(body);
+  player1.assignAllStats(body);
 
   File accountFile2 = File('test/account2.json');
   final String fileContents2 = accountFile2.readAsStringSync();
   final body2 = decodePlayerStats.decodeJson(fileContents2);
-  player2.assignOverallStats(body2);
+  player2.assignAllStats(body2);
 
   File accountFile3 = File('test/account3.json');
   final String fileContents3 = accountFile3.readAsStringSync();
   final body3 = decodePlayerStats.decodeJson(fileContents3);
-  player3.assignOverallStats(body3);
+  player3.assignAllStats(body3);
 
   List<Player> playerList = [player1, player2, player3];
 
@@ -45,14 +45,23 @@ void main() {
     expect(eliminations, 551);
   });
 
-  test('I can sort a list', () {
-    List<Player> sortedPlayerList = sortPlayers.sortAccounts(playerList, "KD");
+  test('I can sort a list of player objects based on their overall KD', () {
+    List<Player> sortedPlayerList =
+        sortPlayers.sortAccountsByOverallStat(playerList, "KD");
     expect(sortedPlayerList[0].username, player2.username);
   });
 
-  test('I can sort a list based on a different stat', () {
+  test(
+      'I can sort a list of player objects based on their overall eliminations',
+      () {
     List<Player> sortedPlayerList =
-        sortPlayers.sortAccounts(playerList, "eliminations");
+        sortPlayers.sortAccountsByOverallStat(playerList, "eliminations");
+    expect(sortedPlayerList[0].username, player3.username);
+  });
+
+  test('I can sort a list of player objects based on solo KD', () {
+    List<Player> sortedPlayerList =
+        sortPlayers.sortAccountByGamemodeStat(playerList);
     expect(sortedPlayerList[0].username, player3.username);
   });
 }
