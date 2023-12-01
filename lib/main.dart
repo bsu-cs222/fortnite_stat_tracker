@@ -39,6 +39,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   String playerGameMode = '';
   List<Player> leaderboard = [];
   late Player player;
+
   @override
   Widget build(BuildContext context) {
     const homeTitle = Column(
@@ -254,15 +255,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.black,
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Here is my leaderboard',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 60,
-                          ),
-                        ),
-                      ),
+                      child: Center(child: leaderBoardDisplay(leaderboard)),
                     ),
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
@@ -391,6 +384,22 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     }
   }
 
+  Widget leaderBoardDisplay(List<Player> leaderboard) {
+    return RichText(
+        text: TextSpan(
+            text: 'Leaderboard\n',
+            style: const TextStyle(
+                fontSize: 70, fontWeight: FontWeight.bold, color: Colors.amber),
+            children: [
+          TextSpan(
+              text: '1st: ${leaderboard[0].username}\n',
+              style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          TextSpan(
+              text: '2st: ${leaderboard[1].username}\n',
+              style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+        ]));
+  }
+
   void _onSearchButtonPressed() async {
     final fetcher = StatFetcher();
     final currentUsername = accountIDInput.text;
@@ -439,6 +448,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
   void _onCastleIconPressed() {
     setState(() {
+      AccountSorter sortPlayers = AccountSorter();
+      List<Player> sortedLeaderboard =
+          sortPlayers.sortAccountsByOverallStat(leaderboard, "KD");
       displayedOnScreen = 'leaderboard';
     });
   }
