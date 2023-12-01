@@ -47,10 +47,19 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'Fortnite Stat\nTracker',
+          'Fortnite',
           style: TextStyle(
+            fontSize: 70,
             color: Colors.blueAccent,
-            fontSize: 40,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'Stat Tracker',
+          style: TextStyle(
+            fontSize: 100,
+            color: Colors.indigo,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ],
@@ -59,10 +68,14 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     final usernameInput = TextField(
       style: const TextStyle(color: Colors.amber, fontSize: 20),
       decoration: const InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 1, color: Colors.amber)),
-          hintText: 'Account ID',
-          hintStyle: TextStyle(fontSize: 20, color: Colors.amber)),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1, color: Colors.amber)),
+        hintText: 'Account ID',
+        hintStyle: TextStyle(
+          fontSize: 20,
+          color: Colors.amber,
+        ),
+      ),
       controller: accountIDInput,
     );
 
@@ -247,7 +260,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               sideBar,
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -279,7 +292,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             sideBar,
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
@@ -299,6 +312,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                     ),
                   ),
                   addPlayerButton,
+                  gameModeDropDown,
                 ],
               ),
             ),
@@ -331,11 +345,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
-                text: 'KD: ${player.kD}\n',
+                text:
+                    'KD: ${double.parse(player.kD.toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
-                text: 'Win Rate: ${player.winRate}\n',
+                text:
+                    'Win Rate: ${double.parse(player.winRate.toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
@@ -366,12 +382,12 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               ),
               TextSpan(
                 text:
-                    'KD: ${player.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlace)}\n',
+                    'KD: ${double.parse(player.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
                 text:
-                    'Win Rate: ${player.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlace)}\n',
+                    'Win Rate: ${double.parse(player.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
