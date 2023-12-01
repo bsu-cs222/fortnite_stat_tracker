@@ -173,6 +173,8 @@ class FilterHandler {
         return player.eliminations;
       case 'matchesPlayed':
         return player.matchesPlayed;
+      default:
+        throw const FormatException();
     }
   }
 
@@ -202,6 +204,8 @@ class FilterHandler {
         return player.gamemodeEliminationsList[determineGamemode(gamemode)];
       case 'matchesPlayed':
         return player.gamemodeMatchesPlayedList[determineGamemode(gamemode)];
+      default:
+        throw const FormatException();
     }
   }
 }
