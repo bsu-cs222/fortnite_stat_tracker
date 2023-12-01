@@ -20,10 +20,10 @@ class StatTrackerApplication extends StatefulWidget {
   const StatTrackerApplication({super.key});
 
   @override
-  State<StatTrackerApplication> createState() => _StatTrackerApplicationState();
+  State<StatTrackerApplication> createState() => _StatTrackerHomePage();
 }
 
-class _StatTrackerApplicationState extends State<StatTrackerApplication> {
+class _StatTrackerHomePage extends State<StatTrackerApplication> {
   String displayedOnScreen = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
@@ -62,6 +62,49 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
           hintText: 'Account ID',
           hintStyle: TextStyle(fontSize: 20, color: Colors.amber)),
       controller: accountIDInput,
+    );
+
+    final sideBar = SafeArea(
+      child: NavigationRail(
+          backgroundColor: Colors.black26,
+          destinations: [
+            NavigationRailDestination(
+              icon: IconButton(
+                onPressed: _onIconPressed,
+                icon: const Icon(
+                  Icons.house,
+                ),
+                color: Colors.amber,
+              ),
+              label: const Text(
+                'Home',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            NavigationRailDestination(
+              icon: IconButton(
+                onPressed: _onCastleIconPressed,
+                icon: const Icon(
+                  Icons.castle_rounded,
+                ),
+                color: Colors.amber,
+              ),
+              label: const Text(
+                'LeaderBoard',
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+          ],
+          selectedIndex: 0,
+          onDestinationSelected: (value) {
+            setState(() {
+              value = 0;
+            });
+          }),
     );
 
     final platformDropdown = DropdownButtonFormField<String>(
@@ -191,34 +234,46 @@ class _StatTrackerApplicationState extends State<StatTrackerApplication> {
             ));
       });
     } else if (displayedOnScreen == 'leaderboard') {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.black,
-              ),
-              child: const Center(
-                child: Text(
-                  'Here is my leaderboard',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 60,
-                  ),
+      return LayoutBuilder(builder: (context, contraints) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              sideBar,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.black,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Here is my leaderboard',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 60,
+                          ),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: _returnHomeFromLeaderBoard,
+                      child: const Text('Home',
+                          style: TextStyle(color: Colors.amber)),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: _returnHomeFromLeaderBoard,
-              child: const Text('home', style: TextStyle(color: Colors.amber)),
-            ),
-          ],
-        ),
-      );
+            ],
+          ),
+        );
+      });
     } else {
       return Scaffold(
         backgroundColor: Colors.black,
