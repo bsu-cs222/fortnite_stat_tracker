@@ -197,11 +197,14 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           );
           ScaffoldMessenger.of(context).showSnackBar(message);
         } else {
+          leaderboard.add(player);
           final message = SnackBar(
             content: const Text('Account Added'),
             action: SnackBarAction(
               label: 'Undo',
-              onPressed: () {},
+              onPressed: () {
+                leaderboard.remove(player);
+              },
             ),
           );
           ScaffoldMessenger.of(context).showSnackBar(message);
