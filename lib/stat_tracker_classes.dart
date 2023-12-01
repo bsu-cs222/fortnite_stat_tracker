@@ -120,6 +120,7 @@ class PlayerStatsDecoder extends JsonDecoder {
           jsonPlayerData['global_stats'][gamemodesList[i]]['matchesplayed'];
       matchesPlayedList.add(matches);
     }
+
     return matchesPlayedList;
   }
 }
@@ -161,7 +162,7 @@ class Player {
   }
 }
 
-class SorterFilter {
+class FilterHandler {
   dynamic returnOverallStat(Player player, String stat) {
     switch (stat) {
       case 'KD':
@@ -205,7 +206,7 @@ class SorterFilter {
   }
 }
 
-class AccountSorter extends SorterFilter {
+class AccountSorter extends FilterHandler {
   List<Player> sortAccountsByOverallStat(
       List<Player> leaderboard, String stat) {
     leaderboard.sort((a, b) =>
