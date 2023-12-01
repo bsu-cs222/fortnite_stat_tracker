@@ -159,17 +159,19 @@ class Player {
     gamemodeMatchesPlayedList =
         decoder.setGamemodeSpecificMatchesPlayed(decodedData);
   }
+}
 
-  dynamic returnOverallStat(String stat) {
+class SorterFilter {
+  dynamic returnOverallStat(Player player, String stat) {
     switch (stat) {
       case 'KD':
-        return kD;
+        return player.kD;
       case 'winRate':
-        return winRate;
+        return player.winRate;
       case 'eliminations':
-        return eliminations;
+        return player.eliminations;
       case 'matchesPlayed':
-        return matchesPlayed;
+        return player.matchesPlayed;
     }
   }
 
@@ -188,33 +190,33 @@ class Player {
     }
   }
 
-  dynamic returnSpecificGamemodeStat(String stat, String gamemode) {
+  dynamic returnSpecificGamemodeStat(
+      Player player, String stat, String gamemode) {
     switch (stat) {
       case 'KD':
-        return gamemodeKDList[determineGamemode(gamemode)];
+        return player.gamemodeKDList[determineGamemode(gamemode)];
       case 'winRate':
-        return gamemodeWinrateList[determineGamemode(gamemode)];
+        return player.gamemodeWinrateList[determineGamemode(gamemode)];
       case 'eliminations':
-        return gamemodeEliminationsList[determineGamemode(gamemode)];
+        return player.gamemodeEliminationsList[determineGamemode(gamemode)];
       case 'matchesPlayed':
-        return gamemodeMatchesPlayedList[determineGamemode(gamemode)];
+        return player.gamemodeMatchesPlayedList[determineGamemode(gamemode)];
     }
   }
 }
 
-class AccountSorter {
+class AccountSorter extends SorterFilter {
   List<Player> sortAccountsByOverallStat(
       List<Player> leaderboard, String stat) {
     leaderboard.sort((a, b) =>
-        b.returnOverallStat(stat).compareTo(a.returnOverallStat(stat)));
+        returnOverallStat(b, stat).compareTo(returnOverallStat(a, stat)));
     return leaderboard;
   }
 
   List<Player> sortAccountByGamemodeStat(
       List<Player> leaderboard, String stat, String gamemode) {
-    leaderboard.sort((a, b) => b
-        .returnSpecificGamemodeStat(stat, gamemode)
-        .compareTo(a.returnSpecificGamemodeStat(stat, gamemode)));
+    leaderboard.sort((a, b) => returnSpecificGamemodeStat(b, stat, gamemode)
+        .compareTo(returnSpecificGamemodeStat(a, stat, gamemode)));
     return leaderboard;
   }
 }
