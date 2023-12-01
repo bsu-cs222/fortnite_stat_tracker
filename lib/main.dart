@@ -37,7 +37,8 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   ];
   String playerPlatform = '';
   String playerGameMode = '';
-
+  List<Player> leaderboard = [];
+  late Player player;
   @override
   Widget build(BuildContext context) {
     const homeTitle = Column(
@@ -70,7 +71,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           destinations: [
             NavigationRailDestination(
               icon: IconButton(
-                onPressed: _onIconPressed,
+                onPressed: _onHomeIconPressed,
                 icon: const Icon(
                   Icons.house,
                 ),
@@ -109,11 +110,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
     final platformDropdown = DropdownButtonFormField<String>(
         decoration: const InputDecoration(
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-          width: 1,
-          color: Colors.amber,
-        ))),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.amber,
+            ),
+          ),
+        ),
         dropdownColor: Colors.black,
         items: platformList
             .map((item) => DropdownMenuItem(
@@ -164,15 +167,53 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         const SizedBox(height: 10.0, width: 10.0),
         gameModeDropDown,
         const SizedBox(height: 5.0, width: 5.0),
-        ElevatedButton(
-            onPressed: _onSearchButtonPressed,
-            //searchForAccount,
-            child: const Text(
-              'Search',
-              style: TextStyle(color: Colors.black),
-            )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: _onSearchButtonPressed,
+              //searchForAccount,
+              child: const Text(
+                'Search',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        ),
       ],
     );
+
+    final addPlayerButton = ElevatedButton(
+      onPressed: () {
+        if (displayedOnScreen == '' ||
+            playerGameMode == '' ||
+            playerPlatform == '') {
+          final message = SnackBar(
+            content: const Text('Insufficient Information Provided'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(message);
+        } else {
+          final message = SnackBar(
+            content: const Text('Account Added'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(message);
+        }
+      },
+      //searchForAccount,
+      child: const Text(
+        'Add +',
+        style: TextStyle(color: Colors.black),
+      ),
+    );
+
     if (displayedOnScreen == '') {
       return LayoutBuilder(builder: (context, constraints) {
         return Scaffold(
@@ -181,49 +222,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SafeArea(
-                  child: NavigationRail(
-                      backgroundColor: Colors.black26,
-                      extended: constraints.maxWidth >= 600,
-                      destinations: [
-                        NavigationRailDestination(
-                          icon: IconButton(
-                            onPressed: _onIconPressed,
-                            icon: const Icon(
-                              Icons.house,
-                            ),
-                            color: Colors.amber,
-                          ),
-                          label: const Text(
-                            'Home',
-                            style: TextStyle(
-                              color: Colors.blueAccent,
-                            ),
-                          ),
-                        ),
-                        NavigationRailDestination(
-                          icon: IconButton(
-                            onPressed: _onCastleIconPressed,
-                            icon: const Icon(
-                              Icons.castle_rounded,
-                            ),
-                            color: Colors.amber,
-                          ),
-                          label: const Text(
-                            'LeaderBoard',
-                            style: TextStyle(
-                              color: Colors.blueAccent,
-                            ),
-                          ),
-                        ),
-                      ],
-                      selectedIndex: 0,
-                      onDestinationSelected: (value) {
-                        setState(() {
-                          value = 0;
-                        });
-                      }),
-                ),
+                sideBar,
                 const Expanded(
                   child: homeTitle,
                 ),
@@ -234,7 +233,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             ));
       });
     } else if (displayedOnScreen == 'leaderboard') {
-      return LayoutBuilder(builder: (context, contraints) {
+      return LayoutBuilder(builder: (context, constraints) {
         return Scaffold(
           backgroundColor: Colors.black,
           body: Row(
@@ -277,69 +276,116 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     } else {
       return Scaffold(
         backgroundColor: Colors.black,
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.0),
-                  color: Colors.black,
-                ),
-                child: Center(
-                  child: Text(
-                    displayedOnScreen,
-                    style: const TextStyle(
-                      color: Colors.amber,
-                      fontSize: 40,
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            sideBar,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.black,
+                    ),
+                    child: Center(
+                      child: organizeStats(player),
                     ),
                   ),
-                ),
+                  ElevatedButton(
+                    onPressed: _onReturnHomeButtonPressed,
+                    child: const Text(
+                      'Return to Home',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  addPlayerButton,
+                ],
               ),
-              ElevatedButton(
-                onPressed: _onReturnHomeButtonPressed,
-                child: const Text(
-                  'Return to Home',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ]),
+            ),
+          ],
+        ),
       );
     }
   }
 
-  String organizeStatsInString(String jsonPlayerData, String playerGameMode) {
-    final searchedAccount = Player();
-    final decoder = JsonDecoder();
-    dynamic decodedStats = decoder.decodeJson(jsonPlayerData);
-    searchedAccount.assignAllStats(decodedStats);
-    String organizedStats = '';
-    organizedStats = buildStringForStats(searchedAccount, playerGameMode);
-    return organizedStats;
-  }
-
-  String buildStringForStats(Player assigner, String playerGameMode) {
-    int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 2;
-    String organizedData = '';
-    int decimalPlaceLimit = 2;
-    if (playerGameMode == 'Overall Stats') {
-      organizedData = '$playerGameMode:'
-          '\nUsername: ${assigner.username}'
-          '\nLevel: ${assigner.level}\n'
-          'K/D: ${double.parse(assigner.kD.toStringAsFixed(decimalPlaceLimit))}'
-          '\nWin Rate: ${double.parse(assigner.winRate.toStringAsFixed(decimalPlaceLimit))}'
-          '\nEliminations: ${assigner.eliminations}\n'
-          'Matches Played: ${assigner.matchesPlayed}\n';
+  Widget organizeStats(Player player) {
+    int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 1;
+    int decimalPlace = 2;
+    if (playerGameMode == gameModeList[0]) {
+      return RichText(
+        text: TextSpan(
+            text: '$playerGameMode\n',
+            style: const TextStyle(
+                fontSize: 70, fontWeight: FontWeight.bold, color: Colors.amber),
+            children: [
+              TextSpan(
+                  text: 'Username: ${player.username}\n',
+                  style:
+                      const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+              TextSpan(
+                text: 'Level: ${player.level}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text: 'Eliminations: ${player.eliminations}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text: 'KD: ${player.kD}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text: 'Win Rate: ${player.winRate}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text: 'Matches Played: ${player.matchesPlayed}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+            ]),
+      );
     } else {
-      organizedData = '$playerGameMode:'
-          '\nUsername: ${assigner.username}'
-          '\nLevel: ${assigner.level}'
-          '\nK/D: ${double.parse(assigner.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlaceLimit))}'
-          '\nWin Rate: ${double.parse(assigner.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlaceLimit))}'
-          '\nEliminations: ${assigner.gamemodeEliminationsList[gameModeIndex]}\n'
-          'Matches Played: ${assigner.gamemodeMatchesPlayedList[gameModeIndex]}\n';
+      return RichText(
+        text: TextSpan(
+            text: '$playerGameMode\n',
+            style: const TextStyle(
+                fontSize: 70, fontWeight: FontWeight.bold, color: Colors.amber),
+            children: [
+              TextSpan(
+                  text: 'Username: ${player.username}\n',
+                  style:
+                      const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+              TextSpan(
+                text: 'Level: ${player.level}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text:
+                    'Eliminations: ${player.gamemodeEliminationsList[gameModeIndex]}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text:
+                    'KD: ${player.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlace)}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text:
+                    'Win Rate: ${player.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlace)}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+              TextSpan(
+                text:
+                    'Matches Played: ${player.gamemodeMatchesPlayedList[gameModeIndex]}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
+              ),
+            ]),
+      );
     }
-    return organizedData;
   }
 
   void _onSearchButtonPressed() async {
@@ -356,10 +402,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     } else {
       String jsonPlayerData =
           await fetcher.getStatJSON(currentPlayerID, currentPlatform);
-      final stats = organizeStatsInString(jsonPlayerData, playerGameMode);
+      final decoder = JsonDecoder();
+      final decodedData = decoder.decodeJson(jsonPlayerData);
+      player = Player();
+      player.assignAllStats(decodedData);
       setState(() {
         try {
-          displayedOnScreen = stats;
+          displayedOnScreen = 'stats';
         } catch (e) {
           displayedOnScreen = 'There was a network error';
         }
@@ -376,7 +425,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     });
   }
 
-  void _onIconPressed() {
+  void _onHomeIconPressed() {
     setState(() {
       displayedOnScreen = '';
       playerGameMode = '';
