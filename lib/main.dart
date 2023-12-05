@@ -332,7 +332,15 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   Widget organizeStats() {
     int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 1;
     int decimalPlace = 2;
-    if (playerGameMode == gameModeList[0]) {
+    if (displayedOnScreen == 'Invalid Input') {
+      return RichText(
+          text: const TextSpan(
+              text: 'Invalid Input\n',
+              style: TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber)));
+    } else if (playerGameMode == gameModeList[0]) {
       return RichText(
         text: TextSpan(
             text: '$playerGameMode\n',
@@ -405,13 +413,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             ]),
       );
     } else {
-      return RichText(
-          text: const TextSpan(
-              text: 'Invalid Input\n',
-              style: TextStyle(
-                  fontSize: 70,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber)));
+      throw const FormatException();
     }
   }
 
