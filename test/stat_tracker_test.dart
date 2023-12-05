@@ -27,12 +27,12 @@ void main() {
   List<Player> playerList = [player1, player2, player3];
 
   test('I can get a users account level', () {
-    int level = decodePlayerStats.setLevel(body);
+    int level = decodePlayerStats.parseLevel(body);
     expect(level, 4);
   });
 
   test('I can get the users overall number of eliminations', () {
-    int eliminations = decodePlayerStats.setKills(body);
+    int eliminations = decodePlayerStats.parsePlayerKills(body);
     expect(eliminations, 1488);
   });
 
@@ -40,14 +40,14 @@ void main() {
       'I can get the users number of eliminations in the solo game mode using a list',
       () {
     List eliminationsList =
-        decodePlayerStats.setGamemodeSpecificEliminations(body);
+        decodePlayerStats.parsePlayerGamemodeEliminations(body);
     int eliminations = eliminationsList[0];
     expect(eliminations, 551);
   });
 
   test('I can sort a list of player objects based on their overall KD', () {
     List<Player> sortedPlayerList =
-        sortPlayers.sortAccountsByOverallStat(playerList, "KD");
+        sortPlayers.sortAccountListByOverallStat(playerList, "KD");
     expect(sortedPlayerList[0].username, player3.username);
   });
 
@@ -55,19 +55,19 @@ void main() {
       'I can sort a list of player objects based on their overall eliminations',
       () {
     List<Player> sortedPlayerList =
-        sortPlayers.sortAccountsByOverallStat(playerList, "eliminations");
+        sortPlayers.sortAccountListByOverallStat(playerList, "eliminations");
     expect(sortedPlayerList[0].username, player3.username);
   });
 
   test('I can sort a list of player objects based on solo KD', () {
     List<Player> sortedPlayerList =
-        sortPlayers.sortAccountByGamemodeStat(playerList, "KD", "solo");
+        sortPlayers.sortAccountListByGamemodeStat(playerList, "KD", "solo");
     expect(sortedPlayerList[0].username, player3.username);
   });
 
   test('I can sort a list of player objects based on trio winrate', () {
-    List<Player> sortedPlayerList =
-        sortPlayers.sortAccountByGamemodeStat(playerList, "winRate", "trio");
+    List<Player> sortedPlayerList = sortPlayers.sortAccountListByGamemodeStat(
+        playerList, "winRate", "trio");
     expect(sortedPlayerList[1].username, player1.username);
   });
 }

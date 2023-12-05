@@ -37,17 +37,17 @@ class StatFetcher extends JsonDecoder {
 class PlayerStatsDecoder extends JsonDecoder {
   List<String> gamemodesList = ['solo', 'duo', 'trio', 'squad'];
 
-  String setUsername(final jsonPlayerData) {
+  String parseUsername(final jsonPlayerData) {
     String newUsername = jsonPlayerData['name'];
     return newUsername;
   }
 
-  int setLevel(final jsonPlayerData) {
+  int parseLevel(final jsonPlayerData) {
     int newLevel = jsonPlayerData['account']['level'];
     return newLevel;
   }
 
-  double setKD(final jsonPlayerData) {
+  double parsePlayerKD(final jsonPlayerData) {
     double overallKD = ((jsonPlayerData['global_stats']['solo']['kd']) +
         (jsonPlayerData['global_stats']['duo']['kd']) +
         (jsonPlayerData['global_stats']['trio']['kd']) +
@@ -55,7 +55,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return overallKD;
   }
 
-  double setWinRate(final jsonPlayerData) {
+  double parsePlayerWinRate(final jsonPlayerData) {
     double overallWinRate = ((jsonPlayerData['global_stats']['solo']
             ['winrate']) +
         (jsonPlayerData['global_stats']['duo']['winrate']) +
@@ -64,7 +64,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return overallWinRate;
   }
 
-  int setKills(final jsonPlayerData) {
+  int parsePlayerKills(final jsonPlayerData) {
     int overallKills = ((jsonPlayerData['global_stats']['solo']['kills']) +
         (jsonPlayerData['global_stats']['duo']['kills']) +
         (jsonPlayerData['global_stats']['trio']['kills']) +
@@ -72,7 +72,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return overallKills;
   }
 
-  int setMatchesPlayed(final jsonPlayerData) {
+  int parsePlayerMatchesPlayed(final jsonPlayerData) {
     int overallMatchesPlayed = ((jsonPlayerData['global_stats']['solo']
             ['matchesplayed']) +
         (jsonPlayerData['global_stats']['duo']['matchesplayed']) +
@@ -81,7 +81,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return overallMatchesPlayed;
   }
 
-  List<double> setGamemodeSpecificKDs(final jsonPlayerData) {
+  List<double> parsePlayerGamemodeKDs(final jsonPlayerData) {
     List<double> kDList = [];
     double kD = 0.0;
     for (int i = 0; i < 4; i++) {
@@ -91,7 +91,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return kDList;
   }
 
-  List<double> setGamemodeSpecificWinrates(final jsonPlayerData) {
+  List<double> parsePlayerGamemodeWinrates(final jsonPlayerData) {
     List<double> winrateList = [];
     for (int i = 0; i < 4; i++) {
       double winrate = jsonPlayerData['global_stats'][gamemodesList[i]]
@@ -102,7 +102,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return winrateList;
   }
 
-  List<int> setGamemodeSpecificEliminations(final jsonPlayerData) {
+  List<int> parsePlayerGamemodeEliminations(final jsonPlayerData) {
     List<int> eliminationsList = [];
     int eliminations = 0;
     for (int i = 0; i < 4; i++) {
@@ -112,7 +112,7 @@ class PlayerStatsDecoder extends JsonDecoder {
     return eliminationsList;
   }
 
-  List<int> setGamemodeSpecificMatchesPlayed(final jsonPlayerData) {
+  List<int> parsePlayerGamemodeMatchesPlayed(final jsonPlayerData) {
     List<int> matchesPlayedList = [];
     int matches = 0;
     for (int i = 0; i < 4; i++) {
@@ -144,21 +144,21 @@ class Player {
   }
 
   void assignOverallStats(dynamic decodedData) {
-    username = decoder.setUsername(decodedData);
-    level = decoder.setLevel(decodedData);
-    kD = decoder.setKD(decodedData);
-    winRate = decoder.setWinRate(decodedData);
-    eliminations = decoder.setKills(decodedData);
-    matchesPlayed = decoder.setMatchesPlayed(decodedData);
+    username = decoder.parseUsername(decodedData);
+    level = decoder.parseLevel(decodedData);
+    kD = decoder.parsePlayerKD(decodedData);
+    winRate = decoder.parsePlayerWinRate(decodedData);
+    eliminations = decoder.parsePlayerKills(decodedData);
+    matchesPlayed = decoder.parsePlayerMatchesPlayed(decodedData);
   }
 
   void assignGameModeSpecificStats(dynamic decodedData) {
-    gamemodeKDList = decoder.setGamemodeSpecificKDs(decodedData);
-    gamemodeWinrateList = decoder.setGamemodeSpecificWinrates(decodedData);
+    gamemodeKDList = decoder.parsePlayerGamemodeKDs(decodedData);
+    gamemodeWinrateList = decoder.parsePlayerGamemodeWinrates(decodedData);
     gamemodeEliminationsList =
-        decoder.setGamemodeSpecificEliminations(decodedData);
+        decoder.parsePlayerGamemodeEliminations(decodedData);
     gamemodeMatchesPlayedList =
-        decoder.setGamemodeSpecificMatchesPlayed(decodedData);
+        decoder.parsePlayerGamemodeMatchesPlayed(decodedData);
   }
 }
 
@@ -211,14 +211,14 @@ class FilterHandler {
 }
 
 class AccountSorter extends FilterHandler {
-  List<Player> sortAccountsByOverallStat(
+  List<Player> sortAccountListByOverallStat(
       List<Player> leaderboard, String stat) {
     leaderboard.sort((a, b) =>
         returnOverallStat(b, stat).compareTo(returnOverallStat(a, stat)));
     return leaderboard;
   }
 
-  List<Player> sortAccountByGamemodeStat(
+  List<Player> sortAccountListByGamemodeStat(
       List<Player> leaderboard, String stat, String gamemode) {
     leaderboard.sort((a, b) => returnSpecificGamemodeStat(b, stat, gamemode)
         .compareTo(returnSpecificGamemodeStat(a, stat, gamemode)));

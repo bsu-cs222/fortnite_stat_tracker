@@ -572,7 +572,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     setState(() {
       AccountSorter sortPlayers = AccountSorter();
       List<Player> sortedLeaderboard =
-          sortPlayers.sortAccountsByOverallStat(leaderboard, "KD");
+          sortPlayers.sortAccountListByOverallStat(leaderboard, "KD");
       displayedOnScreen = 'leaderboard';
     });
   }
