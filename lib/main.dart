@@ -81,6 +81,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
     final sideBar = SafeArea(
       child: NavigationRail(
+          labelType: NavigationRailLabelType.all,
           backgroundColor: Colors.black26,
           destinations: [
             NavigationRailDestination(
@@ -268,13 +269,19 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                         borderRadius: BorderRadius.circular(5.0),
                         color: Colors.black,
                       ),
-                      child: Center(child: leaderBoardDisplay(leaderboard)),
+                      child: Center(child: displayLeaderboard(leaderboard)),
                     ),
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
                           style: TextStyle(color: Colors.amber)),
                     ),
+                    ElevatedButton(
+                        onPressed: _clearLeaderboard,
+                        child: const Text(
+                          'Clear Leaderboard',
+                          style: TextStyle(color: Colors.black),
+                        ))
                   ],
                 ),
               ),
@@ -301,7 +308,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                       color: Colors.black,
                     ),
                     child: Center(
-                      child: organizeStats(player),
+                      child: organizeStats(),
                     ),
                   ),
                   ElevatedButton(
@@ -322,7 +329,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     }
   }
 
-  Widget organizeStats(Player player) {
+  Widget organizeStats() {
     int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 1;
     int decimalPlace = 2;
     if (playerGameMode == gameModeList[0]) {
@@ -360,7 +367,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               ),
             ]),
       );
-    } else {
+    } else if (playerGameMode != gameModeList[0]) {
       return RichText(
         text: TextSpan(
             text: '$playerGameMode\n',
@@ -397,26 +404,126 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               ),
             ]),
       );
+    } else {
+      return RichText(
+          text: const TextSpan(
+              text: 'Invalid Input\n',
+              style: TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber)));
     }
   }
 
-  Widget leaderBoardDisplay(List<Player> leaderboard) {
-    return RichText(
-        text: TextSpan(
-            text: 'Leaderboard\n',
-            style: const TextStyle(
-                fontSize: 70, fontWeight: FontWeight.bold, color: Colors.amber),
-            children: [
-          TextSpan(
-              text: '1st: ${leaderboard[0].username}\n',
-              style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
-          TextSpan(
-              text: '2st: ${leaderboard[1].username}\n',
-              style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
-        ]));
+  Widget displayLeaderboard(List<Player> leaderboard) {
+    if (leaderboard.isEmpty) {
+      return RichText(
+          text: const TextSpan(
+              text: 'No Players Added',
+              style: TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber)));
+    } else if (leaderboard.length == 1) {
+      return RichText(
+          text: TextSpan(
+              text: 'Leaderboard\n',
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber),
+              children: [
+            TextSpan(
+                text: '1st: ${leaderboard[0].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          ]));
+    } else if (leaderboard.length == 2) {
+      return RichText(
+          text: TextSpan(
+              text: 'Leaderboard\n',
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber),
+              children: [
+            TextSpan(
+                text: '1st: ${leaderboard[0].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '2nd: ${leaderboard[1].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          ]));
+    } else if (leaderboard.length == 3) {
+      return RichText(
+          text: TextSpan(
+              text: 'Leaderboard\n',
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber),
+              children: [
+            TextSpan(
+                text: '1st: ${leaderboard[0].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '2nd: ${leaderboard[1].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '3rd: ${leaderboard[2].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          ]));
+    } else if (leaderboard.length == 4) {
+      return RichText(
+          text: TextSpan(
+              text: 'Leaderboard\n',
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber),
+              children: [
+            TextSpan(
+                text: '1st: ${leaderboard[0].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '2nd: ${leaderboard[1].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '3rd: ${leaderboard[2].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '4th: ${leaderboard[3].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          ]));
+    } else {
+      return RichText(
+          text: TextSpan(
+              text: 'Leaderboard\n',
+              style: const TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber),
+              children: [
+            TextSpan(
+                text: '1st: ${leaderboard[0].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '2nd: ${leaderboard[1].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '3rd: ${leaderboard[2].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '4th: ${leaderboard[3].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+            TextSpan(
+                text: '5th: ${leaderboard[4].username}\n',
+                style: const TextStyle(color: Colors.blueAccent, fontSize: 40)),
+          ]));
+    }
   }
 
   void _onSearchButtonPressed() async {
+    player = Player();
     final fetcher = StatFetcher();
     final currentUsername = accountIDInput.text;
     final currentPlatform = playerPlatform;
@@ -432,7 +539,6 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           await fetcher.getStatJSON(currentPlayerID, currentPlatform);
       final decoder = JsonDecoder();
       final decodedData = decoder.decodeJson(jsonPlayerData);
-      player = Player();
       player.assignAllStats(decodedData);
       setState(() {
         try {
@@ -475,5 +581,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     setState(() {
       displayedOnScreen = '';
     });
+  }
+
+  void _clearLeaderboard() {
+    leaderboard.clear();
   }
 }
