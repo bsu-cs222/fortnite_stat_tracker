@@ -38,6 +38,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   String playerPlatform = '';
   String playerGameMode = '';
   List<Player> leaderboard = [];
+
   late Player player;
 
   @override
@@ -173,6 +174,28 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => setState(() => playerGameMode = item!));
 
+    final searchButton = ElevatedButton(
+      onPressed: () {
+        if (playerGameMode == '' || playerPlatform == '') {
+          final message = SnackBar(
+            content: const Text('Insufficient Information Provided'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(message);
+        } else {
+          _onSearchButtonPressed();
+        }
+      },
+      //searchForAccount,
+      child: const Text(
+        'Search',
+        style: TextStyle(color: Colors.black),
+      ),
+    );
+
     final textColumn = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -185,14 +208,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ElevatedButton(
-              onPressed: _onSearchButtonPressed,
-              //searchForAccount,
-              child: const Text(
-                'Search',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
+            searchButton,
           ],
         ),
       ],
@@ -205,6 +221,15 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             playerPlatform == '') {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(message);
+        } else if (leaderboard.length == 5) {
+          final message = SnackBar(
+            content: const Text('Leaderboard at max'),
             action: SnackBarAction(
               label: 'Undo',
               onPressed: () {},
@@ -274,7 +299,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
-                          style: TextStyle(color: Colors.amber)),
+                          style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
                         onPressed: _clearLeaderboard,
@@ -332,7 +357,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   Widget organizeStats() {
     int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 1;
     int decimalPlace = 2;
-    if (displayedOnScreen == 'Invalid Input') {
+    if (displayedOnScreen == 'Invalid Username') {
       return RichText(
           text: const TextSpan(
               text: 'Invalid Input\n',
@@ -534,7 +559,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         playerGameMode == '' ||
         playerPlatform == '') {
       setState(() {
-        displayedOnScreen = 'Invalid Input';
+        displayedOnScreen = 'Invalid Username';
       });
     } else {
       String jsonPlayerData =
@@ -587,5 +612,8 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
   void _clearLeaderboard() {
     leaderboard.clear();
+    setState(() {
+      displayedOnScreen == 'leaderboard';
+    });
   }
 }
