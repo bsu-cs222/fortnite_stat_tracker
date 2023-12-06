@@ -24,6 +24,7 @@ class StatTrackerApplication extends StatefulWidget {
 }
 
 class _StatTrackerHomePage extends State<StatTrackerApplication> {
+  SpaceReplacer replacer = SpaceReplacer();
   String displayedOnScreen = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
@@ -625,8 +626,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _onSearchButtonPressed() async {
     player = Player();
     final fetcher = StatFetcher();
-    final currentUsername = accountIDInput.text;
+    String currentUsername = accountIDInput.text;
     final currentPlatform = playerPlatform;
+    currentUsername = replacer.replaceSpaces(currentUsername);
     final currentPlayerID = await fetcher.getID(currentUsername);
     if (currentPlayerID == null ||
         playerGameMode == '' ||
