@@ -175,7 +175,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             alignment: Alignment.topLeft,
             child: Text("Select a stat",
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
-        onChanged: (item) => setState(() => leaderboardStat = item!));
+        onChanged: (item) => _statDropDownOnChanged(item!));
 
     final gameModeDropDown = DropdownButtonFormField<String>(
         decoration: const InputDecoration(
@@ -667,14 +667,14 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     setState(() {
       if (leaderboardStat == '') {
         leaderboardStat = statList.elementAt(0);
-        AccountSorter sortPlayers = AccountSorter();
-        List<Player> sortedLeaderboard = sortPlayers
-            .sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        AccountSorter sorter = AccountSorter();
+        leaderboard =
+            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
         displayedOnScreen = 'leaderboard';
       } else {
-        AccountSorter sortPlayers = AccountSorter();
-        List<Player> sortedLeaderboard = sortPlayers
-            .sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        AccountSorter sorter = AccountSorter();
+        leaderboard =
+            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
         displayedOnScreen = 'leaderboard';
       }
     });
@@ -699,5 +699,23 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     } else {
       return leaderboardStat;
     }
+  }
+
+  void _statDropDownOnChanged(String stat) {
+    leaderboardStat = stat;
+    setState(() {
+      if (leaderboardStat == '') {
+        leaderboardStat = statList.elementAt(0);
+        AccountSorter sorter = AccountSorter();
+        leaderboard =
+            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        displayedOnScreen = 'leaderboard';
+      } else {
+        AccountSorter sorter = AccountSorter();
+        leaderboard =
+            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        displayedOnScreen = 'leaderboard';
+      }
+    });
   }
 }
