@@ -315,42 +315,79 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         );
       });
     } else {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            sideBar,
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: Colors.black,
+      if (displayedOnScreen == 'Invalid Username') {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              sideBar,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.black,
+                      ),
+                      child: Center(
+                        child: organizeStats(),
+                      ),
                     ),
-                    child: Center(
-                      child: organizeStats(),
+                    ElevatedButton(
+                      onPressed: _onReturnHomeButtonPressed,
+                      child: const Text(
+                        'Return to Home',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: _onReturnHomeButtonPressed,
-                    child: const Text(
-                      'Return to Home',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  addPlayerButton,
-                  gameModeDropDown,
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      );
+            ],
+          ),
+        );
+      } else {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              sideBar,
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        color: Colors.black,
+                      ),
+                      child: Center(
+                        child: organizeStats(),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: _onReturnHomeButtonPressed,
+                      child: const Text(
+                        'Return to Home',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    addPlayerButton,
+                    gameModeDropDown,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
