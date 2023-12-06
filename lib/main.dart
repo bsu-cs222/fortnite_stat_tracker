@@ -103,7 +103,20 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             ),
             NavigationRailDestination(
               icon: IconButton(
-                onPressed: _onCastleIconPressed,
+                onPressed: () {
+                  if (leaderboard.isEmpty) {
+                    final message = SnackBar(
+                      content: const Text('No Player Added'),
+                      action: SnackBarAction(
+                        label: 'close',
+                        onPressed: () {},
+                      ),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(message);
+                  } else {
+                    _onCastleIconPressed();
+                  }
+                },
                 icon: const Icon(
                   Icons.castle_rounded,
                 ),
@@ -325,7 +338,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                       ),
                       child: Center(child: displayLeaderboard(leaderboard)),
                     ),
-                    statDropDown,
+                    SizedBox(width: 300.0, height: 70.0, child: statDropDown),
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
@@ -511,15 +524,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   }
 
   Widget displayLeaderboard(List<Player> leaderboard) {
-    if (leaderboard.isEmpty) {
-      return RichText(
-          text: const TextSpan(
-              text: 'No Players Added',
-              style: TextStyle(
-                  fontSize: 70,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber)));
-    } else if (leaderboard.length == 1) {
+    if (leaderboard.length == 1) {
       return RichText(
           text: TextSpan(
               text: 'Leaderboard\n',

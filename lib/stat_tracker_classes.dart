@@ -174,7 +174,7 @@ class FilterHandler {
       case 'matchesPlayed':
         return player.matchesPlayed;
       default:
-        throw const FormatException();
+        return const FormatException();
     }
   }
 
