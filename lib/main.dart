@@ -709,18 +709,10 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _statDropDownOnChanged(String stat) {
     leaderboardStat = stat;
     setState(() {
-      if (leaderboardStat == '') {
-        leaderboardStat = statList.elementAt(0);
-        AccountSorter sorter = AccountSorter();
-        leaderboard =
-            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
-      } else {
-        AccountSorter sorter = AccountSorter();
-        leaderboard =
-            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
-      }
+      AccountSorter sorter = AccountSorter();
+      leaderboard =
+          sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+      displayedOnScreen = 'leaderboard';
     });
   }
 }
