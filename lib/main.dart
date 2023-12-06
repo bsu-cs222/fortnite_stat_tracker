@@ -35,10 +35,11 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     'Trios',
     'Squads'
   ];
+  final statList = <String>{'KD', 'eliminations', 'matchesPlayed', 'winRate'};
   String playerPlatform = '';
   String playerGameMode = '';
   List<Player> leaderboard = [];
-
+  String leaderboardStat = '';
   late Player player;
 
   @override
@@ -150,6 +151,32 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => setState(() => playerPlatform = item!));
 
+    final statDropDown = DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
+              color: Colors.amber,
+            ),
+          ),
+        ),
+        dropdownColor: Colors.black,
+        items: statList
+            .map((item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(item,
+                      style:
+                          const TextStyle(color: Colors.amber, fontSize: 20)),
+                ))
+            .toList(),
+        isDense: true,
+        isExpanded: true,
+        hint: const Align(
+            alignment: Alignment.topLeft,
+            child: Text("Select a stat",
+                style: TextStyle(color: Colors.amber, fontSize: 20))),
+        onChanged: (item) => setState(() => leaderboardStat = item!));
+
     final gameModeDropDown = DropdownButtonFormField<String>(
         decoration: const InputDecoration(
             enabledBorder: OutlineInputBorder(
@@ -176,11 +203,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
     final searchButton = ElevatedButton(
       onPressed: () {
-        if (playerGameMode == '' || playerPlatform == '') {
+        if (playerGameMode == '' ||
+            playerPlatform == '' ||
+            accountIDInput.text == '') {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
             action: SnackBarAction(
-              label: 'Undo',
+              label: 'close',
               onPressed: () {},
             ),
           );
@@ -222,7 +251,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
             action: SnackBarAction(
-              label: 'Undo',
+              label: 'close',
               onPressed: () {},
             ),
           );
@@ -231,7 +260,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           final message = SnackBar(
             content: const Text('Leaderboard at max'),
             action: SnackBarAction(
-              label: 'Undo',
+              label: 'close',
               onPressed: () {},
             ),
           );
@@ -296,17 +325,19 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                       ),
                       child: Center(child: displayLeaderboard(leaderboard)),
                     ),
+                    statDropDown,
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
                           style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
-                        onPressed: _clearLeaderboard,
-                        child: const Text(
-                          'Clear Leaderboard',
-                          style: TextStyle(color: Colors.black),
-                        ))
+                      onPressed: _clearLeaderboard,
+                      child: const Text(
+                        'Clear Leaderboard',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -634,10 +665,18 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
   void _onCastleIconPressed() {
     setState(() {
-      AccountSorter sortPlayers = AccountSorter();
-      List<Player> sortedLeaderboard =
-          sortPlayers.sortAccountListByOverallStat(leaderboard, "KD");
-      displayedOnScreen = 'leaderboard';
+      if (leaderboardStat == '') {
+        leaderboardStat = statList.elementAt(0);
+        AccountSorter sortPlayers = AccountSorter();
+        List<Player> sortedLeaderboard = sortPlayers
+            .sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        displayedOnScreen = 'leaderboard';
+      } else {
+        AccountSorter sortPlayers = AccountSorter();
+        List<Player> sortedLeaderboard = sortPlayers
+            .sortAccountListByOverallStat(leaderboard, leaderboardStat);
+        displayedOnScreen = 'leaderboard';
+      }
     });
   }
 
@@ -652,5 +691,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     setState(() {
       displayedOnScreen == 'leaderboard';
     });
+  }
+
+  String returnSpecificStat() {
+    if (leaderboardStat == '') {
+      return statList.elementAt(0);
+    } else {
+      return leaderboardStat;
+    }
   }
 }
