@@ -212,13 +212,14 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             alignment: Alignment.topLeft,
             child: Text("Select a Game Mode",
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
-        onChanged: (item) => setState(() => playerGameMode = item!));
+        onChanged: (item) => setState(() {
+              playerGameMode = item!;
+              _gameModeDropDownOnChanged(leaderboardStat, playerGameMode);
+            }));
 
     final searchButton = ElevatedButton(
       onPressed: () {
-        if (playerGameMode == '' ||
-            playerPlatform == '' ||
-            accountIDInput.text == '') {
+        if (playerPlatform == '' || accountIDInput.text == '') {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
             action: SnackBarAction(
@@ -245,8 +246,6 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         const SizedBox(height: 10.0, width: 10.0),
         platformDropdown,
         const SizedBox(height: 10.0, width: 10.0),
-        gameModeDropDown,
-        const SizedBox(height: 5.0, width: 5.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -258,9 +257,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
     final addPlayerButton = ElevatedButton(
       onPressed: () {
-        if (displayedOnScreen == '' ||
-            playerGameMode == '' ||
-            playerPlatform == '') {
+        if (displayedOnScreen == '' || playerPlatform == '') {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
             action: SnackBarAction(
@@ -339,6 +336,8 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                       child: Center(child: displayLeaderboard(leaderboard)),
                     ),
                     SizedBox(width: 300.0, height: 70.0, child: statDropDown),
+                    SizedBox(
+                        width: 300.0, height: 70.0, child: gameModeDropDown),
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
@@ -446,10 +445,10 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                   fontSize: 70,
                   fontWeight: FontWeight.bold,
                   color: Colors.amber)));
-    } else if (playerGameMode == gameModeList[0]) {
+    } else if (playerGameMode == gameModeList[0] || playerGameMode == '') {
       return RichText(
         text: TextSpan(
-            text: '$playerGameMode\n',
+            text: 'Overall Stats\n',
             style: const TextStyle(
                 fontSize: 70, fontWeight: FontWeight.bold, color: Colors.amber),
             children: [
@@ -628,9 +627,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     final currentUsername = accountIDInput.text;
     final currentPlatform = playerPlatform;
     final currentPlayerID = await fetcher.getID(currentUsername);
-    if (currentPlayerID == null ||
-        playerGameMode == '' ||
-        playerPlatform == '') {
+    if (currentPlayerID == null || playerPlatform == '') {
       setState(() {
         displayedOnScreen = 'Invalid Username';
       });
@@ -720,6 +717,40 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         leaderboard =
             sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
         displayedOnScreen = 'leaderboard';
+      }
+    });
+  }
+
+  void _gameModeDropDownOnChanged(String stat, String gameMode) {
+    playerGameMode = gameMode;
+    leaderboardStat = stat;
+    setState(() {
+      if (playerGameMode == 'Overall Stats') {
+        if (leaderboardStat == '') {
+          leaderboardStat = statList.elementAt(0);
+          AccountSorter sorter = AccountSorter();
+          leaderboard =
+              sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+          displayedOnScreen = 'leaderboard';
+        } else {
+          AccountSorter sorter = AccountSorter();
+          leaderboard =
+              sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+          displayedOnScreen = 'leaderboard';
+        }
+      } else {
+        if (leaderboardStat == '') {
+          leaderboardStat = statList.elementAt(0);
+          AccountSorter sorter = AccountSorter();
+          leaderboard = sorter.sortAccountListByGamemodeStat(
+              leaderboard, leaderboardStat, playerGameMode);
+          displayedOnScreen = 'leaderboard';
+        } else {
+          AccountSorter sorter = AccountSorter();
+          leaderboard = sorter.sortAccountListByGamemodeStat(
+              leaderboard, leaderboardStat, playerGameMode);
+          displayedOnScreen = 'leaderboard';
+        }
       }
     });
   }
