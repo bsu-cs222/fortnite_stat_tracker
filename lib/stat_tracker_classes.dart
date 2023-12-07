@@ -209,12 +209,12 @@ class Filterer {
     switch (stat) {
       case 'KD':
         return player.gamemodeKDList[returnGamemodeListIndex(gamemode)];
-      case 'winRate':
+      case 'Winrate':
         return player.gamemodeWinrateList[returnGamemodeListIndex(gamemode)];
-      case 'eliminations':
+      case 'Eliminations':
         return player
             .gamemodeEliminationsList[returnGamemodeListIndex(gamemode)];
-      case 'matchesPlayed':
+      case 'Matches Played':
         return player
             .gamemodeMatchesPlayedList[returnGamemodeListIndex(gamemode)];
       default:

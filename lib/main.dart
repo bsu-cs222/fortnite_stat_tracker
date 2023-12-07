@@ -36,7 +36,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     'Trios',
     'Squads'
   ];
-  final statList = <String>{'KD', 'eliminations', 'matchesPlayed', 'winRate'};
+  final statList = <String>{'KD', 'Eliminations', 'Matches Played', 'Winrate'};
   String playerPlatform = '';
   String playerGameMode = '';
   List<Player> leaderboard = [];
@@ -187,7 +187,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         isExpanded: true,
         hint: const Align(
             alignment: Alignment.topLeft,
-            child: Text("Select a stat",
+            child: Text("Select a Stat",
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
         onChanged: (item) => _statDropDownOnChanged(item!));
 
