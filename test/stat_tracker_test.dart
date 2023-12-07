@@ -9,6 +9,7 @@ void main() {
   Player drewdeshawn = Player();
   Player realWizard = Player();
   Player fakePlayerAccount = Player();
+  SpaceReplacer replacer = SpaceReplacer();
 
   File drewdeshawnAccountFile = File('test/account.json');
   final String drewdeshawnFileContents =
@@ -99,5 +100,13 @@ void main() {
     List<Player> sortedPlayerList = accountSorter.sortAccountListByGamemodeStat(
         listOfFortnitePlayers, "winRate", "trio");
     expect(sortedPlayerList[2].username, fakePlayerAccount.username);
+  });
+
+  test(
+      'I can replace the spaces in a string with the appropriate URL counterpart',
+      () {
+    String exampleString = "Apples and Bananas";
+    exampleString = replacer.replaceSpaces(exampleString);
+    expect(exampleString, "Apples%20and%20Bananas");
   });
 }

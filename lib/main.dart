@@ -109,7 +109,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                     final message = SnackBar(
                       content: const Text('No Player Added'),
                       action: SnackBarAction(
-                        label: 'close',
+                        label: 'Close',
                         onPressed: () {},
                       ),
                     );
