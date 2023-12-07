@@ -19,12 +19,12 @@ class StatTrackerApplication extends StatefulWidget {
   const StatTrackerApplication({super.key});
 
   @override
-  State<StatTrackerApplication> createState() => _StatTrackerHomePage();
+  State<StatTrackerApplication> createState() => _StatTrackerApplicationBody();
 }
 
-class _StatTrackerHomePage extends State<StatTrackerApplication> {
+class _StatTrackerApplicationBody extends State<StatTrackerApplication> {
   SpaceReplacer replacer = SpaceReplacer();
-  String displayedOnScreen = '';
+  String pageState = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
   final platformList = <String>["PC", "Playstation", "Xbox"];
@@ -88,7 +88,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           destinations: [
             NavigationRailDestination(
               icon: IconButton(
-                onPressed: _onHomeIconPressed,
+                onPressed: _onReturnHomeButtonPressed,
                 icon: const Icon(
                   Icons.house,
                 ),
@@ -261,7 +261,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       ),
     );
 
-    final textColumn = Column(
+    final homePageTextColumn = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         usernameInput,
@@ -279,7 +279,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
 
     final addPlayerButton = ElevatedButton(
       onPressed: () {
-        if (displayedOnScreen == '' || playerPlatform == '') {
+        if (pageState == '' || playerPlatform == '') {
           final message = SnackBar(
             content: const Text('Insufficient Information Provided'),
             action: SnackBarAction(
@@ -318,7 +318,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       ),
     );
 
-    if (displayedOnScreen == '') {
+    if (pageState == '') {
       return LayoutBuilder(builder: (context, constraints) {
         return Scaffold(
             backgroundColor: Colors.black,
@@ -331,12 +331,12 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                   child: homeTitle,
                 ),
                 Expanded(
-                  child: textColumn,
+                  child: homePageTextColumn,
                 ),
               ],
             ));
       });
-    } else if (displayedOnScreen == 'leaderboard') {
+    } else if (pageState == 'leaderboard') {
       return LayoutBuilder(builder: (context, constraints) {
         return Scaffold(
           backgroundColor: Colors.black,
@@ -363,8 +363,8 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                         height: 70.0,
                         child: leaderboardGameModeDropDown),
                     ElevatedButton(
-                      onPressed: _returnHomeFromLeaderBoard,
-                      child: const Text('Home',
+                      onPressed: _onReturnHomeButtonPressed,
+                      child: const Text('Return Home',
                           style: TextStyle(color: Colors.black)),
                     ),
                     ElevatedButton(
@@ -382,7 +382,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         );
       });
     } else {
-      if (displayedOnScreen == 'Invalid Username') {
+      if (pageState == 'Invalid Username') {
         return Scaffold(
           backgroundColor: Colors.black,
           body: Row(
@@ -461,7 +461,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   Widget organizeStats() {
     int gameModeIndex = (gameModeList.indexOf(playerGameMode)) - 1;
     int decimalPlace = 2;
-    if (displayedOnScreen == 'Invalid Username') {
+    if (pageState == 'Invalid Username') {
       return RichText(
           text: const TextSpan(
               text: 'This Player Does Not Exist\n',
@@ -662,7 +662,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     final currentPlayerID = await fetcher.getID(currentUsername);
     if (currentPlayerID == null || playerPlatform == '') {
       setState(() {
-        displayedOnScreen = 'Invalid Username';
+        pageState = 'Invalid Username';
       });
     } else {
       String jsonPlayerData =
@@ -672,9 +672,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       player.assignAllStats(decodedData);
       setState(() {
         try {
-          displayedOnScreen = 'stats';
+          pageState = 'stats';
         } catch (e) {
-          displayedOnScreen = 'There was a network error';
+          pageState = 'There was a network error';
         }
       });
     }
@@ -683,16 +683,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _onReturnHomeButtonPressed() {
     setState(() {
       playerGameMode = '';
-      displayedOnScreen = '';
-      accountPlatformInput.clear();
-      accountIDInput.clear();
-    });
-  }
-
-  void _onHomeIconPressed() {
-    setState(() {
-      displayedOnScreen = '';
-      playerGameMode = '';
+      pageState = '';
       accountPlatformInput.clear();
       accountIDInput.clear();
     });
@@ -705,19 +696,13 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         AccountSorter sorter = AccountSorter();
         leaderboard =
             sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
+        pageState = 'leaderboard';
       } else {
         AccountSorter sorter = AccountSorter();
         leaderboard =
             sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
+        pageState = 'leaderboard';
       }
-    });
-  }
-
-  void _returnHomeFromLeaderBoard() {
-    setState(() {
-      displayedOnScreen = '';
     });
   }
 
@@ -725,16 +710,8 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     leaderboard.clear();
     setState(() {
       leaderboard.length = 0;
-      displayedOnScreen == 'leaderboard';
+      pageState == 'leaderboard';
     });
-  }
-
-  String returnSpecificStat() {
-    if (leaderboardStat == '') {
-      return statList.elementAt(0);
-    } else {
-      return leaderboardStat;
-    }
   }
 
   void _statDropDownOnChanged(String stat) {
@@ -743,7 +720,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       AccountSorter sorter = AccountSorter();
       leaderboard =
           sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-      displayedOnScreen = 'leaderboard';
+      pageState = 'leaderboard';
     });
   }
 
@@ -757,12 +734,12 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           AccountSorter sorter = AccountSorter();
           leaderboard =
               sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-          displayedOnScreen = 'leaderboard';
+          pageState = 'leaderboard';
         } else {
           AccountSorter sorter = AccountSorter();
           leaderboard =
               sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-          displayedOnScreen = 'leaderboard';
+          pageState = 'leaderboard';
         }
       } else {
         if (leaderboardStat == '') {
@@ -770,12 +747,12 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
           AccountSorter sorter = AccountSorter();
           leaderboard = sorter.sortAccountListByGameModeStat(
               leaderboard, leaderboardStat, playerGameMode);
-          displayedOnScreen = 'leaderboard';
+          pageState = 'leaderboard';
         } else {
           AccountSorter sorter = AccountSorter();
           leaderboard = sorter.sortAccountListByGameModeStat(
               leaderboard, leaderboardStat, playerGameMode);
-          displayedOnScreen = 'leaderboard';
+          pageState = 'leaderboard';
         }
       }
     });
