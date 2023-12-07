@@ -465,7 +465,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     if (displayedOnScreen == 'Invalid Username') {
       return RichText(
           text: const TextSpan(
-              text: 'Invalid Input\n',
+              text: 'This Player Does Not Exist\n',
               style: TextStyle(
                   fontSize: 70,
                   fontWeight: FontWeight.bold,
