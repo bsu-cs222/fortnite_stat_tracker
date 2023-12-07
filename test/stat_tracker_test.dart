@@ -64,41 +64,41 @@ void main() {
       'I can sort a list of player objects based on their overall eliminations',
       () {
     List<Player> sortedListOfFortnitePlayers = accountSorter
-        .sortAccountListByOverallStat(listOfFortnitePlayers, "eliminations");
+        .sortAccountListByOverallStat(listOfFortnitePlayers, "Eliminations");
     expect(sortedListOfFortnitePlayers[0].username, fakePlayerAccount.username);
   });
 
   test('I can sort a list of player objects based on their solo KD', () {
     List<Player> sortedListOfFortnitePlayers = accountSorter
-        .sortAccountListByGameModeStat(listOfFortnitePlayers, "KD", "solo");
+        .sortAccountListByGameModeStat(listOfFortnitePlayers, "KD", "Solos");
     expect(sortedListOfFortnitePlayers[0].username, fakePlayerAccount.username);
   });
 
   test('When given an overall stat, I can return the chosen stat', () {
-    playerStatHandler.returnOverallStat(drewdeshawn, 'winRate');
+    playerStatHandler.returnOverallStat(drewdeshawn, 'Winrate');
     expect(drewdeshawn.winRate, 13.0875);
   });
 
   test('When given an overall stat, I can return the chosen stat', () {
-    playerStatHandler.returnOverallStat(realWizard, 'matchesPlayed');
+    playerStatHandler.returnOverallStat(realWizard, 'Matches Played');
     expect(realWizard.matchesPlayed, 1598);
   });
 
   test('When given a specific stat, I can return the chosen stat', () {
     playerStatHandler.returnSpecificGameModeStat(
-        fakePlayerAccount, 'eliminations', "squad");
+        fakePlayerAccount, 'Eliminations', "Squads");
     expect(fakePlayerAccount.gameModeEliminationsList[3], 601);
   });
 
   test('When given a specific stat, I can return the chosen stat', () {
     playerStatHandler.returnSpecificGameModeStat(
-        realWizard, 'matchesPlayed', "solo");
+        realWizard, 'Matches Played', "Solos");
     expect(fakePlayerAccount.gameModeMatchesPlayedList[0], 515);
   });
 
   test('I can sort a list of player objects based on trio winrate', () {
     List<Player> sortedPlayerList = accountSorter.sortAccountListByGameModeStat(
-        listOfFortnitePlayers, "winRate", "trio");
+        listOfFortnitePlayers, "Win Rate", "Trios");
     expect(sortedPlayerList[2].username, fakePlayerAccount.username);
   });
 

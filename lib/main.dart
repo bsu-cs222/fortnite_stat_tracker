@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Define a custom Form widget.
 class StatTrackerApplication extends StatefulWidget {
   const StatTrackerApplication({super.key});
 
