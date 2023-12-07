@@ -31,7 +31,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   final platformList = <String>["PC", "Playstation", "Xbox"];
   final gameModeList = <String>[
     'Overall Stats',
-    'Solo',
+    'Solos',
     'Duos',
     'Trios',
     'Squads'
@@ -213,10 +213,32 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
             alignment: Alignment.topLeft,
             child: Text("Select a Game Mode",
                 style: TextStyle(color: Colors.amber, fontSize: 20))),
-        onChanged: (item) => setState(() {
-              playerGameMode = item!;
-              _gameModeDropDownOnChanged(leaderboardStat, playerGameMode);
-            }));
+        onChanged: (item) => setState(() => playerGameMode = item!));
+
+    final leaderboardGameModeDropDown = DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+          width: 1,
+          color: Colors.amber,
+        ))),
+        dropdownColor: Colors.black,
+        items: gameModeList
+            .map((item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(item,
+                      style:
+                          const TextStyle(color: Colors.amber, fontSize: 20)),
+                ))
+            .toList(),
+        isDense: true,
+        isExpanded: true,
+        hint: const Align(
+            alignment: Alignment.topLeft,
+            child: Text("Select a Game Mode",
+                style: TextStyle(color: Colors.amber, fontSize: 20))),
+        onChanged: (item) =>
+            _gameModeDropDownOnChanged(leaderboardStat, item!));
 
     final searchButton = ElevatedButton(
       onPressed: () {
@@ -292,7 +314,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
       },
       //searchForAccount,
       child: const Text(
-        'Add +',
+        'Add Player to Leaderboard +',
         style: TextStyle(color: Colors.black),
       ),
     );
@@ -326,7 +348,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               sideBar,
               Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -338,7 +360,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
                     ),
                     SizedBox(width: 300.0, height: 70.0, child: statDropDown),
                     SizedBox(
-                        width: 300.0, height: 70.0, child: gameModeDropDown),
+                        width: 300.0,
+                        height: 70.0,
+                        child: leaderboardGameModeDropDown),
                     ElevatedButton(
                       onPressed: _returnHomeFromLeaderBoard,
                       child: const Text('Home',
@@ -524,7 +548,15 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   }
 
   Widget displayLeaderboard(List<Player> leaderboard) {
-    if (leaderboard.length == 1) {
+    if (leaderboard.isEmpty) {
+      return RichText(
+          text: const TextSpan(
+              text: 'Leaderboard is Empty',
+              style: TextStyle(
+                  fontSize: 70,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber)));
+    } else if (leaderboard.length == 1) {
       return RichText(
           text: TextSpan(
               text: 'Leaderboard\n',
@@ -693,6 +725,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _clearLeaderboard() {
     leaderboard.clear();
     setState(() {
+      leaderboard.length = 0;
       displayedOnScreen == 'leaderboard';
     });
   }
@@ -719,7 +752,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     playerGameMode = gameMode;
     leaderboardStat = stat;
     setState(() {
-      if (playerGameMode == 'Overall Stats') {
+      if (playerGameMode == 'Overall Stats' || playerGameMode == '') {
         if (leaderboardStat == '') {
           leaderboardStat = statList.elementAt(0);
           AccountSorter sorter = AccountSorter();

@@ -194,13 +194,13 @@ class FilterHandler {
 
   int determineGamemode(String gamemode) {
     switch (gamemode) {
-      case 'solo':
+      case 'Solos':
         return 0;
-      case 'duo':
+      case 'Duos':
         return 1;
-      case 'trio':
+      case 'Trios':
         return 2;
-      case 'squad':
+      case 'Squads':
         return 3;
       default:
         throw const FormatException();
