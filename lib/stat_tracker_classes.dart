@@ -139,8 +139,7 @@ class PlayerStatsDecoder extends JsonDecoder {
   }
 }
 
-class Player {
-  final decoder = PlayerStatsDecoder();
+class Player extends PlayerStatsDecoder {
   String username = '';
   int level = 0;
   double kD = 0.0;
@@ -158,25 +157,23 @@ class Player {
   }
 
   void assignOverallStats(dynamic decodedData) {
-    username = decoder.parseUsername(decodedData);
-    level = decoder.parseLevel(decodedData);
-    kD = decoder.parsePlayerKD(decodedData);
-    winRate = decoder.parsePlayerWinRate(decodedData);
-    eliminations = decoder.parsePlayerKills(decodedData);
-    matchesPlayed = decoder.parsePlayerMatchesPlayed(decodedData);
+    username = parseUsername(decodedData);
+    level = parseLevel(decodedData);
+    kD = parsePlayerKD(decodedData);
+    winRate = parsePlayerWinRate(decodedData);
+    eliminations = parsePlayerKills(decodedData);
+    matchesPlayed = parsePlayerMatchesPlayed(decodedData);
   }
 
   void assignGameModeSpecificStats(dynamic decodedData) {
-    gamemodeKDList = decoder.parsePlayerGamemodeKDs(decodedData);
-    gamemodeWinrateList = decoder.parsePlayerGamemodeWinrates(decodedData);
-    gamemodeEliminationsList =
-        decoder.parsePlayerGamemodeEliminations(decodedData);
-    gamemodeMatchesPlayedList =
-        decoder.parsePlayerGamemodeMatchesPlayed(decodedData);
+    gamemodeKDList = parsePlayerGamemodeKDs(decodedData);
+    gamemodeWinrateList = parsePlayerGamemodeWinrates(decodedData);
+    gamemodeEliminationsList = parsePlayerGamemodeEliminations(decodedData);
+    gamemodeMatchesPlayedList = parsePlayerGamemodeMatchesPlayed(decodedData);
   }
 }
 
-class FilterHandler {
+class Filterer {
   dynamic returnOverallStat(Player player, String stat) {
     switch (stat) {
       case 'KD':
@@ -192,7 +189,7 @@ class FilterHandler {
     }
   }
 
-  int determineGamemode(String gamemode) {
+  int returnGamemodeListIndex(String gamemode) {
     switch (gamemode) {
       case 'Solos':
         return 0;
@@ -211,20 +208,22 @@ class FilterHandler {
       Player player, String stat, String gamemode) {
     switch (stat) {
       case 'KD':
-        return player.gamemodeKDList[determineGamemode(gamemode)];
+        return player.gamemodeKDList[returnGamemodeListIndex(gamemode)];
       case 'winRate':
-        return player.gamemodeWinrateList[determineGamemode(gamemode)];
+        return player.gamemodeWinrateList[returnGamemodeListIndex(gamemode)];
       case 'eliminations':
-        return player.gamemodeEliminationsList[determineGamemode(gamemode)];
+        return player
+            .gamemodeEliminationsList[returnGamemodeListIndex(gamemode)];
       case 'matchesPlayed':
-        return player.gamemodeMatchesPlayedList[determineGamemode(gamemode)];
+        return player
+            .gamemodeMatchesPlayedList[returnGamemodeListIndex(gamemode)];
       default:
         throw const FormatException();
     }
   }
 }
 
-class AccountSorter extends FilterHandler {
+class AccountSorter extends Filterer {
   List<Player> sortAccountListByOverallStat(
       List<Player> leaderboard, String stat) {
     leaderboard.sort((a, b) =>
