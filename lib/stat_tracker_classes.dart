@@ -8,6 +8,20 @@ class JsonDecoder {
   }
 }
 
+class SpaceReplacer {
+  String replaceSpaces(String input) {
+    StringBuffer output = StringBuffer();
+    for (int i = 0; i < input.length; i++) {
+      if (input[i] == ' ') {
+        output.write('%20');
+      } else {
+        output.write(input[i]);
+      }
+    }
+    return output.toString();
+  }
+}
+
 class StatFetcher extends JsonDecoder {
   //final File apiFile = File('lib/Auth.txt');
   Future<String?> getID(String username) async {

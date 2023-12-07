@@ -24,6 +24,7 @@ class StatTrackerApplication extends StatefulWidget {
 }
 
 class _StatTrackerHomePage extends State<StatTrackerApplication> {
+  SpaceReplacer replacer = SpaceReplacer();
   String displayedOnScreen = '';
   TextEditingController accountIDInput = TextEditingController();
   TextEditingController accountPlatformInput = TextEditingController();
@@ -624,8 +625,9 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _onSearchButtonPressed() async {
     player = Player();
     final fetcher = StatFetcher();
-    final currentUsername = accountIDInput.text;
+    String currentUsername = accountIDInput.text;
     final currentPlatform = playerPlatform;
+    currentUsername = replacer.replaceSpaces(currentUsername);
     final currentPlayerID = await fetcher.getID(currentUsername);
     if (currentPlayerID == null || playerPlatform == '') {
       setState(() {
@@ -706,18 +708,10 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
   void _statDropDownOnChanged(String stat) {
     leaderboardStat = stat;
     setState(() {
-      if (leaderboardStat == '') {
-        leaderboardStat = statList.elementAt(0);
-        AccountSorter sorter = AccountSorter();
-        leaderboard =
-            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
-      } else {
-        AccountSorter sorter = AccountSorter();
-        leaderboard =
-            sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
-        displayedOnScreen = 'leaderboard';
-      }
+      AccountSorter sorter = AccountSorter();
+      leaderboard =
+          sorter.sortAccountListByOverallStat(leaderboard, leaderboardStat);
+      displayedOnScreen = 'leaderboard';
     });
   }
 
