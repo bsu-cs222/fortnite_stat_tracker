@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:r6_getter_test/stat_tracker_classes.dart';
+import 'package:r6_getter_test/stat_tracker.dart';
 
 void main() {
   PlayerStatsDecoder playerStatsDecoder = PlayerStatsDecoder();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:r6_getter_test/stat_tracker_classes.dart';
+import 'package:r6_getter_test/stat_tracker.dart';
 
 void main() => runApp(const MyApp());
 
