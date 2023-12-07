@@ -5,7 +5,7 @@ import 'package:r6_getter_test/stat_tracker_classes.dart';
 void main() {
   PlayerStatsDecoder playerStatsDecoder = PlayerStatsDecoder();
   AccountSorter accountSorter = AccountSorter();
-  FilterHandler playerStatHandler = FilterHandler();
+  Filterer playerStatHandler = Filterer();
   Player drewdeshawn = Player();
   Player realWizard = Player();
   Player fakePlayerAccount = Player();
