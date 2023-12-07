@@ -49,7 +49,7 @@ void main() {
       'I can get the users number of eliminations in the solo game mode using a list',
       () {
     List drewdeshawnEliminationsList =
-        playerStatsDecoder.parsePlayerGamemodeEliminations(body);
+        playerStatsDecoder.parsePlayerGameModeEliminations(body);
     int eliminations = drewdeshawnEliminationsList[0];
     expect(eliminations, 551);
   });
@@ -70,7 +70,7 @@ void main() {
 
   test('I can sort a list of player objects based on their solo KD', () {
     List<Player> sortedListOfFortnitePlayers = accountSorter
-        .sortAccountListByGamemodeStat(listOfFortnitePlayers, "KD", "solo");
+        .sortAccountListByGameModeStat(listOfFortnitePlayers, "KD", "solo");
     expect(sortedListOfFortnitePlayers[0].username, fakePlayerAccount.username);
   });
 
@@ -85,19 +85,19 @@ void main() {
   });
 
   test('When given a specific stat, I can return the chosen stat', () {
-    playerStatHandler.returnSpecificGamemodeStat(
+    playerStatHandler.returnSpecificGameModeStat(
         fakePlayerAccount, 'eliminations', "squad");
-    expect(fakePlayerAccount.gamemodeEliminationsList[3], 601);
+    expect(fakePlayerAccount.gameModeEliminationsList[3], 601);
   });
 
   test('When given a specific stat, I can return the chosen stat', () {
-    playerStatHandler.returnSpecificGamemodeStat(
+    playerStatHandler.returnSpecificGameModeStat(
         realWizard, 'matchesPlayed', "solo");
-    expect(fakePlayerAccount.gamemodeMatchesPlayedList[0], 515);
+    expect(fakePlayerAccount.gameModeMatchesPlayedList[0], 515);
   });
 
   test('I can sort a list of player objects based on trio winrate', () {
-    List<Player> sortedPlayerList = accountSorter.sortAccountListByGamemodeStat(
+    List<Player> sortedPlayerList = accountSorter.sortAccountListByGameModeStat(
         listOfFortnitePlayers, "winRate", "trio");
     expect(sortedPlayerList[2].username, fakePlayerAccount.username);
   });

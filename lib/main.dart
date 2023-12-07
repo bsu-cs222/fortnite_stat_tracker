@@ -522,22 +522,22 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
               ),
               TextSpan(
                 text:
-                    'Eliminations: ${player.gamemodeEliminationsList[gameModeIndex]}\n',
+                    'Eliminations: ${player.gameModeEliminationsList[gameModeIndex]}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
                 text:
-                    'KD: ${double.parse(player.gamemodeKDList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
+                    'KD: ${double.parse(player.gameModeKDList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
                 text:
-                    'Win Rate: ${double.parse(player.gamemodeWinrateList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
+                    'Win Rate: ${double.parse(player.gameModeWinRateList[gameModeIndex].toStringAsFixed(decimalPlace))}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
               TextSpan(
                 text:
-                    'Matches Played: ${player.gamemodeMatchesPlayedList[gameModeIndex]}\n',
+                    'Matches Played: ${player.gameModeMatchesPlayedList[gameModeIndex]}\n',
                 style: const TextStyle(color: Colors.blueAccent, fontSize: 40),
               ),
             ]),
@@ -769,12 +769,12 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
         if (leaderboardStat == '') {
           leaderboardStat = statList.elementAt(0);
           AccountSorter sorter = AccountSorter();
-          leaderboard = sorter.sortAccountListByGamemodeStat(
+          leaderboard = sorter.sortAccountListByGameModeStat(
               leaderboard, leaderboardStat, playerGameMode);
           displayedOnScreen = 'leaderboard';
         } else {
           AccountSorter sorter = AccountSorter();
-          leaderboard = sorter.sortAccountListByGamemodeStat(
+          leaderboard = sorter.sortAccountListByGameModeStat(
               leaderboard, leaderboardStat, playerGameMode);
           displayedOnScreen = 'leaderboard';
         }

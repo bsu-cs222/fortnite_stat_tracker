@@ -49,7 +49,7 @@ class StatFetcher extends JsonDecoder {
 }
 
 class PlayerStatsDecoder extends JsonDecoder {
-  List<String> gamemodesList = ['solo', 'duo', 'trio', 'squad'];
+  List<String> gameModesList = ['solo', 'duo', 'trio', 'squad'];
 
   String parseUsername(final jsonPlayerData) {
     String newUsername = jsonPlayerData['name'];
@@ -95,44 +95,44 @@ class PlayerStatsDecoder extends JsonDecoder {
     return overallMatchesPlayed;
   }
 
-  List<double> parsePlayerGamemodeKDs(final jsonPlayerData) {
+  List<double> parsePlayerGameModeKDs(final jsonPlayerData) {
     List<double> kDList = [];
     double kD = 0.0;
     for (int i = 0; i < 4; i++) {
-      kD = jsonPlayerData['global_stats'][gamemodesList[i]]['kd'].toDouble();
+      kD = jsonPlayerData['global_stats'][gameModesList[i]]['kd'].toDouble();
       kDList.add(kD);
     }
     return kDList;
   }
 
-  List<double> parsePlayerGamemodeWinrates(final jsonPlayerData) {
-    List<double> winrateList = [];
+  List<double> parsePlayerGameModeWinRates(final jsonPlayerData) {
+    List<double> winRateList = [];
     for (int i = 0; i < 4; i++) {
-      double winrate = jsonPlayerData['global_stats'][gamemodesList[i]]
+      double winRate = jsonPlayerData['global_stats'][gameModesList[i]]
               ['winrate']
           .toDouble();
-      winrateList.add(winrate);
+      winRateList.add(winRate);
     }
-    return winrateList;
+    return winRateList;
   }
 
-  List<int> parsePlayerGamemodeEliminations(final jsonPlayerData) {
+  List<int> parsePlayerGameModeEliminations(final jsonPlayerData) {
     List<int> eliminationsList = [];
     int eliminations = 0;
     for (int i = 0; i < 4; i++) {
-      eliminations = jsonPlayerData['global_stats'][gamemodesList[i]]['kills'];
+      eliminations = jsonPlayerData['global_stats'][gameModesList[i]]['kills'];
       eliminationsList.add(eliminations);
     }
     return eliminationsList;
   }
 
-  List<int> parsePlayerGamemodeMatchesPlayed(final jsonPlayerData) {
+  List<int> parsePlayerGameModeMatchesPlayed(final jsonPlayerData) {
     List<int> matchesPlayedList = [];
-    int matches = 0;
+    int matchesPlayed = 0;
     for (int i = 0; i < 4; i++) {
-      matches =
-          jsonPlayerData['global_stats'][gamemodesList[i]]['matchesplayed'];
-      matchesPlayedList.add(matches);
+      matchesPlayed =
+          jsonPlayerData['global_stats'][gameModesList[i]]['matchesplayed'];
+      matchesPlayedList.add(matchesPlayed);
     }
 
     return matchesPlayedList;
@@ -146,10 +146,10 @@ class Player extends PlayerStatsDecoder {
   double winRate = 0.0;
   int eliminations = 0;
   int matchesPlayed = 0;
-  List<double> gamemodeKDList = [];
-  List<double> gamemodeWinrateList = [];
-  List<int> gamemodeEliminationsList = [];
-  List<int> gamemodeMatchesPlayedList = [];
+  List<double> gameModeKDList = [];
+  List<double> gameModeWinRateList = [];
+  List<int> gameModeEliminationsList = [];
+  List<int> gameModeMatchesPlayedList = [];
 
   void assignAllStats(dynamic decodedData) {
     assignOverallStats(decodedData);
@@ -166,10 +166,10 @@ class Player extends PlayerStatsDecoder {
   }
 
   void assignGameModeSpecificStats(dynamic decodedData) {
-    gamemodeKDList = parsePlayerGamemodeKDs(decodedData);
-    gamemodeWinrateList = parsePlayerGamemodeWinrates(decodedData);
-    gamemodeEliminationsList = parsePlayerGamemodeEliminations(decodedData);
-    gamemodeMatchesPlayedList = parsePlayerGamemodeMatchesPlayed(decodedData);
+    gameModeKDList = parsePlayerGameModeKDs(decodedData);
+    gameModeWinRateList = parsePlayerGameModeWinRates(decodedData);
+    gameModeEliminationsList = parsePlayerGameModeEliminations(decodedData);
+    gameModeMatchesPlayedList = parsePlayerGameModeMatchesPlayed(decodedData);
   }
 }
 
@@ -189,8 +189,8 @@ class Filterer {
     }
   }
 
-  int returnGamemodeListIndex(String gamemode) {
-    switch (gamemode) {
+  int returnGameModeListIndex(String gameMode) {
+    switch (gameMode) {
       case 'Solos':
         return 0;
       case 'Duos':
@@ -204,19 +204,19 @@ class Filterer {
     }
   }
 
-  dynamic returnSpecificGamemodeStat(
-      Player player, String stat, String gamemode) {
+  dynamic returnSpecificGameModeStat(
+      Player player, String stat, String gameMode) {
     switch (stat) {
       case 'KD':
-        return player.gamemodeKDList[returnGamemodeListIndex(gamemode)];
+        return player.gameModeKDList[returnGameModeListIndex(gameMode)];
       case 'Win Rate':
-        return player.gamemodeWinrateList[returnGamemodeListIndex(gamemode)];
+        return player.gameModeWinRateList[returnGameModeListIndex(gameMode)];
       case 'Eliminations':
         return player
-            .gamemodeEliminationsList[returnGamemodeListIndex(gamemode)];
+            .gameModeEliminationsList[returnGameModeListIndex(gameMode)];
       case 'Matches Played':
         return player
-            .gamemodeMatchesPlayedList[returnGamemodeListIndex(gamemode)];
+            .gameModeMatchesPlayedList[returnGameModeListIndex(gameMode)];
       default:
         throw const FormatException();
     }
@@ -231,10 +231,10 @@ class AccountSorter extends Filterer {
     return leaderboard;
   }
 
-  List<Player> sortAccountListByGamemodeStat(
-      List<Player> leaderboard, String stat, String gamemode) {
-    leaderboard.sort((a, b) => returnSpecificGamemodeStat(b, stat, gamemode)
-        .compareTo(returnSpecificGamemodeStat(a, stat, gamemode)));
+  List<Player> sortAccountListByGameModeStat(
+      List<Player> leaderboard, String stat, String gameMode) {
+    leaderboard.sort((a, b) => returnSpecificGameModeStat(b, stat, gameMode)
+        .compareTo(returnSpecificGameModeStat(a, stat, gameMode)));
     return leaderboard;
   }
 }
