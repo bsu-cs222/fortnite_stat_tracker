@@ -36,7 +36,7 @@ class _StatTrackerHomePage extends State<StatTrackerApplication> {
     'Trios',
     'Squads'
   ];
-  final statList = <String>{'KD', 'eliminations', 'matchesPlayed', 'winRate'};
+  final statList = <String>{'KD', 'Eliminations', 'Matches Played', 'Win Rate'};
   String playerPlatform = '';
   String playerGameMode = '';
   List<Player> leaderboard = [];
